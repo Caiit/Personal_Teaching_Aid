@@ -22,7 +22,9 @@ Looked into speech recognition:
   - Sphinx speech recognition
   
 ## 09-02-2017
-Managed to get openface working locally.
+Managed to get openface working locally. 
+
+Created our own little dataset and script to test openfaces with a webcam. 
 
 Program idea:
 A child is seated in front of the webcam and photos are taken to identify who it is. If the confidence is high enough, the child is identified and the lesson begins. If the confidence is too low for a certain amount of photos, the images of the child are added to the database as training data (if training is fast enough, the program can say it is trying to recognise the child and starting the rest of the program -> otherwise, the program has to be trained the next time). 
@@ -30,3 +32,4 @@ A child is seated in front of the webcam and photos are taken to identify who it
 Datastructure:
 - Child types their name (first and last name) into the program after the pictures are added. Child is identified by the name of the folder (their first and last name).
 - Link child to their maths level
+
