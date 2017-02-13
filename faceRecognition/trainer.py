@@ -37,10 +37,15 @@ from sklearn.naive_bayes import GaussianNB
 
 
 def prepareImages():
+    # Delete old cache file
+    if os.path.exists("./aligned-images/cache.t7"):
+        os.remove("./aligned-images/cache.t7")
     # Do pose detection and alignment
-    os.system("./util/align-dlib.py ./training-images/ align outerEyesAndNose ./aligned-images/ --size 96")
+    os.system("./util/align-dlib.py ./training-images/ align outerEyesAndNose" +
+    " ./aligned-images/ --size 96")
     # Generate representations from the aligned images
-    os.system("./batch-represent/main.lua -outDir ./generated-embeddings/ -data ./aligned-images/")
+    os.system("./batch-represent/main.lua -outDir ./generated-embeddings/ -data"
+    + " ./aligned-images/")
 
 
 def train(folder, classifier):
@@ -109,4 +114,5 @@ if __name__ == '__main__':
     classifier = "LinearSvm"
     prepareImages()
     train("./generated-embeddings/", classifier)
+    # To test the newly trained classifier
     classify()
