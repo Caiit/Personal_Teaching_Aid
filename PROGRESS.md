@@ -37,3 +37,9 @@ Datastructure:
 
 ## 13-02-2017
 Child sits in front of the webcam and 10 photos are taken. The face recognition identifies the child and adds a counter to that classified person. The person that is classified the most out of ten times is taken as identified person. For example, out of the ten images, the face recognition recognizes the child 7 times as "person1" and does not know (threshold is too low) the other 3 times: {"person1": 7, "\_unknown":3}. The child is now identifies as person1. If the child is unknown, the name is asked and the images are saved to the new person. 
+
+## 16-02-2017
+found watson: https://www.ibm.com/watson/developercloud/doc/speech-to-text/
+might be interesting for recognising who's speaking.
+
+Finished project proposal.
