@@ -26,17 +26,14 @@ def recognizeAnswer(answer):
 		phrase = r.recognize_google(audio, language='nl-NL')
 		print time.time() - startTime
 		print("You said " + phrase)                # recognize speech using Google Speech Recognition
-		if(containsAnswer(phrase, answer)):
-			return True
-		else:
-			return False
+		return containsAnswer(phrase, answer)
 
 	except LookupError:                            # speech is unintelligible
 		print("Could not understand audio")
-		return False
 	except sr.UnknownValueError:
 		print("Could not understand audio")
-		return False
+
+	return False
 
 
 def containsAnswer(phrase, answer):
@@ -51,6 +48,7 @@ def containsAnswer(phrase, answer):
 		if unit in phrase:
 			print("Incorrect answer")
 	return False
+
 
 if __name__ == "__main__":
 	with open('wordToNumDict.pickle', 'rb') as handle:
