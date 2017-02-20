@@ -43,3 +43,18 @@ found watson: https://www.ibm.com/watson/developercloud/doc/speech-to-text/
 might be interesting for recognising who's speaking.
 
 Finished project proposal.
+
+## 20-02-2017
+Error with Speech Recognition part on ubuntu, on windows it works fine.
+
+>ALSA lib pcm.c:2266:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.rear </br>
+ALSA lib pcm.c:2266:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.center_lfe </br>
+ALSA lib pcm.c:2266:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.side </br>
+ALSA lib pcm_route.c:867:(find_matching_chmap) Found no matching channel map </br>
+ALSA lib pcm_route.c:867:(find_matching_chmap) Found no matching channel map </br>
+ALSA lib pcm_route.c:867:(find_matching_chmap) Found no matching channel map </br>
+ALSA lib pcm_route.c:867:(find_matching_chmap) Found no matching channel map </br>
+
+Fixed first three errors with: http://stackoverflow.com/questions/7088672/pyaudio-working-but-spits-out-error-messages-each-time
+
+It did work (it weren't errors, but warnings?), so we now only supress the errors and didn't use the first fix.
