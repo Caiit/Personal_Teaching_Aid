@@ -58,3 +58,6 @@ ALSA lib pcm_route.c:867:(find_matching_chmap) Found no matching channel map </b
 Fixed first three errors with: http://stackoverflow.com/questions/7088672/pyaudio-working-but-spits-out-error-messages-each-time
 
 It did work (it weren't errors, but warnings?), so we now only supress the errors and didn't use the first fix.
+
+## 22-02-2017
+Looked into text to speech for dutch: https://pypi.python.org/pypi/gTTS
