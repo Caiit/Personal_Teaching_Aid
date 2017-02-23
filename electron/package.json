@@ -1,0 +1,14 @@
+{
+  "name": "electron",
+  "version": "1.4.3",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "dependencies": {
+    "zerorpc": "*"
+  },
+  "author": "Caiit",
+  "license": "ISC"
+}
