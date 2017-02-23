@@ -66,13 +66,16 @@ Looked into text to speech for dutch: https://pypi.python.org/pypi/gTTS
 Creating an GUI with electron (http://electron.atom.io/)
 
 things to install for this part:
+
 nodejs: 
->curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
-sudo apt-get install -y nodejs
-npm:
->sudo apt-get install npm
-zerorpc:
->sudo pip install zerorpc
+>curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash - </br>
+sudo apt-get install -y nodejs </br>
+
+npm: </br>
+>sudo apt-get install npm </br>
+
+zerorpc: </br>
+>sudo pip install zerorpc </br>
 
 faceRecognition is started when clicking on the start button in the GUI.
 
