@@ -34,21 +34,20 @@ def recognizeStudent():
 
     return run(align, net)
 
+
 def run(align, net):
     # Start recognising
-    person, images = identifyPerson(align, net)
+    person = identifyPerson(align, net)
     fName = ""
     lName = ""
 
     # Identify
     if person == "_unknown":
-        person, fName, lName = saveNewUser(images)
+        person, fName, lName = saveNewUser()
 
-    print fName
-    print lName
-
-    # start program
+    # Start program
     return person, fName, lName
+
 
 def identifyPerson(align, net):
     video_capture = cv2.VideoCapture(0)
@@ -72,8 +71,6 @@ def identifyPerson(align, net):
                 persons[i] = "_unknown"
             print "P: " + str(persons) + " C: " + str(confidences)
             possiblePersons[persons[i]] += 1
-        # cv2.putText(frame, "P: {} C: {}".format(persons, confidences),
-        #             (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
         cv2.imshow('', frame)
         # Quit the program on the press of key 'q'
         if cv2.waitKey(1) & 0xFF == ord('q'):
@@ -83,7 +80,8 @@ def identifyPerson(align, net):
     cv2.destroyAllWindows()
 
     person = possiblePersons.most_common(1)[0][0]
-    return person, images
+    return person
+
 
 def infer(img, align, net):
     classifierModel = "./generated-embeddings/classifier.pkl"
@@ -101,19 +99,15 @@ def infer(img, align, net):
             print "No Face detected"
             return (None, None)
         predictions = clf.predict_proba(rep).ravel()
-        # print predictions
         maxI = np.argmax(predictions)
-        # max2 = np.argsort(predictions)[-3:][::-1][1]
         persons.append(le.inverse_transform(maxI))
-        # print str(le.inverse_transform(max2)) + ": "+str( predictions [max2])
-        # ^ prints the second prediction
         confidences.append(predictions[maxI])
-        # print("Predict {} with {:.2f} confidence.".format(person, confidence))
         if isinstance(clf, GMM):
             dist = np.linalg.norm(rep - clf.means_[maxI])
             print("  + Distance from the mean: {}".format(dist))
             pass
     return (persons, confidences)
+
 
 def getRep(bgrImg, align, net):
     if bgrImg is None:
@@ -121,14 +115,10 @@ def getRep(bgrImg, align, net):
 
     rgbImg = cv2.cvtColor(bgrImg, cv2.COLOR_BGR2RGB)
 
-    # Get the largest face bounding box
-    # bb = align.getLargestFaceBoundingBox(rgbImg) #Bounding box
-
     # Get all bounding boxes
     bb = align.getAllFaceBoundingBoxes(rgbImg)
 
     if bb is None:
-        # raise Exception("Unable to find a face: {}".format(imgPath))
         return None
 
     alignedFaces = []
@@ -147,27 +137,53 @@ def getRep(bgrImg, align, net):
     for alignedFace in alignedFaces:
         reps.append(net.forward(alignedFace))
 
-    # print reps
     return reps
 
-def saveNewUser(images):
+
+def saveNewUser():
     fName = raw_input("I don't know you, what is your first name?\n")
     lName = raw_input("And what is your last name?\n")
+
     # Create folder with name
     fileDir = os.path.dirname(os.path.realpath(__file__))
     trainDir = os.path.join(fileDir, 'training-images')
     directory = os.path.join(trainDir, fName + "-" + lName)
     n = 0
+
     if not os.path.exists(directory + "-0"):
         os.makedirs(directory + "-0")
     else:
         n = max([int(d.split("-")[2]) for d in os.listdir(trainDir)
             if d.startswith(fName + "-" + lName)] + [0]) + 1
         os.makedirs(directory + "-" + str(n))
+
+    images = takePictures()
+
     for i, img in enumerate(images):
         cv2.imwrite(directory + "-" + str(n) + "/image" + str(i) + ".png", img)
     return fName + "-" + lName + "-" + str(n), fName, lName
 
+
+def takePictures():
+    images = []
+    i = 0
+
+    while i < 10:
+        camera = cv2.VideoCapture(0)
+        s, img = camera.read()
+        cv2.namedWindow("image", cv2.WINDOW_AUTOSIZE)
+
+        if s:
+            cv2.imshow("image", img)
+            key = cv2.waitKey(0) & 0xFF
+
+            if key == ord("y"):
+                images.append(img)
+                i += 1
+            cv2.destroyAllWindows()
+            camera.release()
+
+    return images
 
 
 if __name__ == '__main__':
