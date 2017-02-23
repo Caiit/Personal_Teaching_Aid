@@ -81,3 +81,6 @@ faceRecognition is started when clicking on the start button in the GUI.
 
 Integrated image recognition in main program. 
 Taking pictures and check if they are correct instead of using the images that were used for recogniting the person.
+
+Integrated speech recognition in main program.
+Speech module works faster if you connect an external microphone.
