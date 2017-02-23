@@ -44,6 +44,9 @@ def run(align, net):
     if person == "_unknown":
         person, fName, lName = saveNewUser(images)
 
+    print fName
+    print lName
+
     # start program
     return person, fName, lName
 

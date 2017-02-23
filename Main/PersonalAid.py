@@ -52,6 +52,7 @@ def saveStudent(student):
 if __name__== '__main__':
     recognizedStudent, firstName, lastName = recognizeStudent()
     student = getStudentInfo(recognizedStudent, firstName, lastName)
+    print "Hello, " + student.getName() + "!"
     problems = getPersonalProblems(student)
     checkAnswers(student, problems)
     saveStudent(student)

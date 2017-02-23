@@ -115,4 +115,4 @@ if __name__ == '__main__':
     prepareImages()
     train("./generated-embeddings/", classifier)
     # To test the newly trained classifier
-    classify()
+    # classify()
