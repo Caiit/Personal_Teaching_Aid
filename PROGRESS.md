@@ -61,3 +61,20 @@ It did work (it weren't errors, but warnings?), so we now only supress the error
 
 ## 22-02-2017
 Looked into text to speech for dutch: https://pypi.python.org/pypi/gTTS
+
+## 23-02-2017
+Creating an GUI with electron (http://electron.atom.io/)
+
+things to install for this part:
+nodejs: 
+>curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+sudo apt-get install -y nodejs
+npm:
+>sudo apt-get install npm
+zerorpc:
+>sudo pip install zerorpc
+
+faceRecognition is started when clicking on the start button in the GUI.
+
+Integrated image recognition in main program. 
+Taking pictures and check if they are correct instead of using the images that were used for recogniting the person.
