@@ -20,7 +20,7 @@ class Api(object):
         if studentID is not "_unknown":
             self.getStudentInfo(studentID)
             name = self.student.getName()
-        return studentID, name
+        return name
 
 
     def addNewUser(self, firstName, lastName):
@@ -65,7 +65,11 @@ class Api(object):
 
     def getNewProblem(self):
         # TODO: check if not empty
-        return self.problems.pop(0)[0]
+        return self.problems[0][0]
+
+
+    def checkAnswer(self, answer):
+        return eval(self.problems.pop(0)[0]) == int(answer)
 
     # def checkAnswers(student, problems):
     #     print(student.getOperators())

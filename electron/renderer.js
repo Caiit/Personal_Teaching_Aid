@@ -2,8 +2,6 @@ const zerorpc = require("zerorpc");
 let client = new zerorpc.Client();
 client.connect("tcp://127.0.0.1:3006");
 
-var studentId;
-
 client.invoke("echo", "server ready", (error, res) => {
   if (error || res !== 'server ready') {
     console.error(error);
@@ -18,24 +16,19 @@ let name = document.querySelector("#name");
 // Recognize student
 start.addEventListener("click", () => {
   client.invoke("recognizeStudent", (error, result) => {
-    var id = result[0];
-    var studentName = result[1];
     if (error) {
       console.error(error);
-    } else if (id == "_unknown") {
+    } else if (result== "") {
       // Show input field
-      // name.textContent = "";
       document.getElementById("newStudent").style.display = "block";
     } else {
       // Show name
-      studentId = id;
-      name.textContent = studentName;
+      name.textContent = result;
       document.getElementById("newStudent").style.display = "none";
-      getProblems(studentId);
+      getProblems();
     }
   })
 })
-
 
 // Add new user
 let newUser = document.querySelector("#submitNewStudent")
@@ -52,15 +45,32 @@ newUser.addEventListener("click", () => {
     name.textContent = fName + " " + lName;
     document.getElementById("newStudent").style.display = "none";
   })
+  getProblems();
 })
 
 // Get problems
-function getProblems(studentId) {
+function getProblems() {
   client.invoke("getNewProblem", (error, problem) => {
     if (error) {
       console.error(error);
     } else {
       document.getElementById("problem").textContent = problem;
+      document.getElementById("problemPart").style.display = "block";
     }
   })
 }
+
+// Handle answer
+let answer = document.querySelector("#submitAnswer")
+answer.addEventListener("click", () => {
+  var answer = document.getElementById("inputAnswer").value;
+  console.log(answer)
+  client.invoke("checkAnswer", answer, (error, result) => {
+    if (error) {
+      console.error(error);
+    }
+    // TODO: hier wat mee doen
+    document.getElementById("problem").textContent = result;
+  })
+  getProblems();
+})

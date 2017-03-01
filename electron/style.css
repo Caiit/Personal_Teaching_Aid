@@ -13,3 +13,8 @@ h1 {
   background-color: green;
   display: none;
 }
+
+#problemPart {
+  background-color: red;
+  display: none;
+}
