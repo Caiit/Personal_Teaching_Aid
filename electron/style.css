@@ -1,5 +1,5 @@
 body {
-    background-color: lightblue;
+    background-color: #ECECEC;
     text-align: center;
     font-family: monospace;
 }
@@ -17,4 +17,24 @@ h1 {
 #problemPart {
   background-color: blue;
   display: none;
+}
+
+.button1 {
+    background-color: white;
+    color: #4CAF50;
+    padding: 25px 42px;
+    text-align: center;
+    font-size: 22px;
+    border: 1px solid #4CAF50;
+    border-radius: 8px;
+    -webkit-transition-duration: 0.4s;
+    transition-duration: 0.4s;
+
+    margin-top: 200px;
+}
+
+.button1:hover {
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
 }

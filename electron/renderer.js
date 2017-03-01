@@ -10,7 +10,8 @@ client.invoke("echo", "server ready", (error, res) => {
   }
 })
 
-let start = document.getElementById("start");
+let start = document.getElementById("start")
+start.className = "button1";
 let name = document.querySelector("#name");
 
 // Recognize student
