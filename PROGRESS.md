@@ -84,3 +84,11 @@ Taking pictures and check if they are correct instead of using the images that w
 
 Integrated speech recognition in main program.
 Speech module works faster if you connect an external microphone.
+
+## 01-03-2017
+The camera caption did not close when finished with face recognition. However, when using a different OpenCV version it did work. We now use version 3.2.0.
+
+We worked on the UI. You can now add yourself if the program does not recognize you. If it does, a random problem is shown.
+
+We started working on the first draft report.
+
