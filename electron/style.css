@@ -1,0 +1,15 @@
+body {
+    background-color: lightblue;
+    text-align: center;
+    font-family: monospace;
+}
+
+h1 {
+    color: white;
+}
+
+
+#newStudent {
+  background-color: green;
+  display: none;
+}

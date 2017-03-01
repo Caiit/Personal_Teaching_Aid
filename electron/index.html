@@ -4,10 +4,19 @@
   <head>
     <meta charset="UTF-8">
     <title>Personal Teaching Aid</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
   </head>
   <body>
     <h1 id="name"></h1>
+    <div id="newStudent">
+      <form id="newStudentForm">
+        First name: <input type="text" id="inputFname" name="fname"><br>
+        Last name: <input type="text" id="inputLname" name="lname"><br>
+        <button type="button" id="submitNewStudent"> Go </button>
+      </form>
+    </div>
     <button type="button" id="start">Start</button>
+    <p id="problem"></p>
   </body>
   <script>
     require('./renderer.js')

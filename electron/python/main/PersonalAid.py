@@ -2,50 +2,71 @@ import pickle
 from Student import Student
 from ProblemGenerator import ProblemGenerator
 from imageRecognition import recognizeStudent
+from imageRecognition import saveNewUser
 import os
 import zerorpc
 
 class Api(object):
+
+    def __init__(self):
+        fileDir = os.path.dirname(os.path.realpath(__file__))
+        self.dbFile = os.path.join(fileDir, "StudentDatabase.pkl")
+        self.loadDatabase()
+
+
     def recognizeStudent(self):
-        recognizedStudent, firstName, lastName = recognizeStudent()
-        return recognizedStudent
+        studentID = recognizeStudent()
+        name = ""
+        if studentID is not "_unknown":
+            self.getStudentInfo(studentID)
+            name = self.student.getName()
+        return studentID, name
+
+
+    def addNewUser(self, firstName, lastName):
+        studentID = saveNewUser(firstName, lastName)
+
+        if not studentID in self.database:
+            studentName = firstName + " " + lastName
+            self.student = Student(studentName, studentID)
+            self.database[studentID] = self.student
+            self.storeDatabase()
+
+
+    def getStudentInfo(self, studentID):
+        self.student = self.database.get(studentID)
+        # TODO: deze vanuit ui krijgen
+        n = 1
+        self.getPersonalProblems(n)
 
 
     def echo(self, text):
         """echo any text"""
         return text
 
-    # def loadDatabase():
-    #     try:
-    #         database = pickle.load(open("StudentDatabase.pkl", "rb" ))
-    #     except EOFError:
-    #         database = {}
-    #     except IOError:
-    #         database = {}
-    #     return database
-    #
-    #
-    # def storeDatabase(database):
-    #     pickle.dump(database,open("StudentDatabase.pkl", "wb"))
-    #
-    #
-    # def getStudentInfo(studentID, firstName, lastName):
-    #     database = loadDatabase()
-    #     if not studentID in database:
-    #         studentName = firstName + " " + lastName
-    #         database[studentID] = Student(studentName, studentID)
-    #         storeDatabase(database)
-    #     student = database[studentID]
-    #     return student
-    #
-    #
-    # def getPersonalProblems(student):
-    #     pg = ProblemGenerator(student)
-    #     n = int(raw_input('Enter number of problems to be solved: '))
-    #     problems = pg.getProblems(n)
-    #     return problems
-    #
-    #
+
+    def loadDatabase(self):
+        try:
+            self.database = pickle.load(open(self.dbFile, "rb"))
+        except EOFError:
+            self.database = {}
+        except IOError:
+            self.database = {}
+
+
+    def storeDatabase(self):
+        pickle.dump(self.database, open(self.dbFile, "wb"))
+
+
+    def getPersonalProblems(self, n):
+        pg = ProblemGenerator(self.student)
+        self.problems = pg.getProblems(n)
+
+
+    def getNewProblem(self):
+        # TODO: check if not empty
+        return self.problems.pop(0)[0]
+
     # def checkAnswers(student, problems):
     #     print(student.getOperators())
     #     for p in problems:
@@ -75,13 +96,9 @@ class Api(object):
 #     saveStudent(student)
 
 
-def parse_port():
-    return 4242
-
-
 def main():
-    # Api().recognizeStudent()
-    addr = 'tcp://127.0.0.1:' + str(parse_port())
+    # Api().getStudentInfo("tirza-soutehakjsdhasdj-0")
+    addr = 'tcp://127.0.0.1:' + str(3006)
     s = zerorpc.Server(Api())
     s.bind(addr)
     print('start running on {}'.format(addr))
