@@ -51,8 +51,13 @@ newUser.addEventListener("click", () => {
 // Get problems
 function getProblems() {
   client.invoke("getNewProblem", (error, problem) => {
+    console.log(problem);
     if (error) {
       console.error(error);
+    } else if (problem == "None") {
+      document.getElementById("done").textContent = "You are finished.";
+      answer.style.display = "none";
+      document.getElementById("inputAnswer").style.display = "none";
     } else {
       document.getElementById("problem").textContent = problem;
       document.getElementById("problemPart").style.display = "block";
@@ -64,13 +69,16 @@ function getProblems() {
 let answer = document.querySelector("#submitAnswer")
 answer.addEventListener("click", () => {
   var answer = document.getElementById("inputAnswer").value;
-  console.log(answer)
   client.invoke("checkAnswer", answer, (error, result) => {
     if (error) {
       console.error(error);
     }
     // TODO: hier wat mee doen
-    document.getElementById("problem").textContent = result;
+    if (result) {
+      document.getElementById("problemPart").style.backgroundColor = "green";
+    } else {
+      document.getElementById("problemPart").style.backgroundColor = "red";
+    }
   })
   getProblems();
 })

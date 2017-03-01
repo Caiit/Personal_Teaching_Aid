@@ -64,12 +64,15 @@ class Api(object):
 
 
     def getNewProblem(self):
-        # TODO: check if not empty
+        if not self.problems:
+            return "None"
         return self.problems[0][0]
 
 
     def checkAnswer(self, answer):
-        return eval(self.problems.pop(0)[0]) == int(answer)
+        if not self.problems:
+            return None
+        return eval(self.problems.pop()[0]) == int(answer)
 
     # def checkAnswers(student, problems):
     #     print(student.getOperators())
@@ -101,7 +104,13 @@ class Api(object):
 
 
 def main():
-    # Api().getStudentInfo("tirza-soutehakjsdhasdj-0")
+    # api = Api()
+    # api.getStudentInfo("tirza-soutehakjsdhasdj-0")
+    # for i in range(2):
+    #     problem = api.getNewProblem()
+    #     if problem:
+    #         print api.checkAnswer(eval(problem))
+
     addr = 'tcp://127.0.0.1:' + str(3006)
     s = zerorpc.Server(Api())
     s.bind(addr)
