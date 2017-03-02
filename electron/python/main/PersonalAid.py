@@ -3,6 +3,7 @@ from Student import Student
 from ProblemGenerator import ProblemGenerator
 from imageRecognition import recognizeStudent
 from imageRecognition import saveNewUser
+from answerRecognition import correct
 from gtts import gTTS
 import os
 import zerorpc
@@ -14,6 +15,8 @@ class Api(object):
         self.dbFile = os.path.join(fileDir, "StudentDatabase.pkl")
         self.loadDatabase()
 
+        with open(os.path.join(fileDir, "wordToNumDict.pickle"), "rb") as handle:
+            self.w2n = pickle.load(handle)
 
     def recognizeStudent(self):
         studentID = recognizeStudent()
@@ -67,33 +70,36 @@ class Api(object):
     def getNewProblem(self):
         if not self.problems:
             return "None"
-        problem = self.problems[0][0]
-        self.textToSpeech(problem)
-        return problem
+        self.problem = self.problems.pop(0)[0]
+        self.textToSpeech()
+        return self.problem
 
 
-    def checkAnswer(self, answer):
+    def checkAnswer(self):
         if not self.problems:
             return None
-        return eval(self.problems.pop(0)[0]) == int(answer)
+        # TODO: Update operators?
+        correctAnswer = eval(self.problem)
+        return correct(correctAnswer, self.w2n, 2)
 
 
-    def textToSpeech(self, text):
+    def textToSpeech(self):
         language = "nl"
-        tts = gTTS(text=text, lang=language)
+        tts = gTTS(text=self.problem, lang=language)
         tts.save("speech.mp3")
         os.system("mpg123 speech.mp3")
 
 
     # def checkAnswers(student, problems):
-    #     print(student.getOperators())
+    #     with open('wordToNumDict.pickle', 'rb') as handle:
+    #         w2n = pickle.load(handle)
     #     for p in problems:
     #         problem = p[0]
     #         operator = p[1]
     #         print(problem)
     #         correctAnswer = eval(problem)
-    #         givenAnswer = int(raw_input('What is your answer to this problem?: '))
-    #         student.updateOperators(operator, givenAnswer==correctAnswer)
+    #         givenAnswer = AnswerRecognition.correct(correctAnswer, w2n, 2)
+    #         student.updateOperators(operator, givenAnswer)
     #     print(student.getOperators())
     #
     #
@@ -104,24 +110,20 @@ class Api(object):
     #     storeDatabase(database)
 
 
-
 # if __name__== '__main__':
-#     recognizedStudent, firstName, lastName = recognizeStudent()
-#     student = getStudentInfo(recognizedStudent, firstName, lastName)
-#     print "Hello, " + student.getName() + "!"
-#     problems = getPersonalProblems(student)
-#     checkAnswers(student, problems)
-#     saveStudent(student)
+#     Api().recognizeStudent()
+    # checkAnswer(student, problems)
+    # saveStudent(student)
 
 
 def main():
-    # api = Api()
-    # api.getStudentInfo("tirza-soutehakjsdhasdj-0")
-    # for i in range(2):
-    #     problem = api.getNewProblem()
-    #     if problem:
-    #         print api.checkAnswer(eval(problem))
-    #     print problem
+#     # api = Api()
+#     # api.getStudentInfo("tirza-soutehakjsdhasdj-0")
+#     # for i in range(2):
+#     #     problem = api.getNewProblem()
+#     #     if problem:
+#     #         print api.checkAnswer(eval(problem))
+#     #     print problem
     addr = 'tcp://127.0.0.1:' + str(3006)
     s = zerorpc.Server(Api())
     s.bind(addr)

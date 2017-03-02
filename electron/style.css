@@ -5,12 +5,13 @@ body {
 }
 
 h1 {
-    color: white;
+    color: black;
+    font-family: monospace;
 }
 
 
 #newStudent {
-  background-color: green;
+  /*background-color: green;*/
   display: none;
 }
 
@@ -19,22 +20,49 @@ h1 {
   display: none;
 }
 
-.button1 {
-    background-color: white;
-    color: #4CAF50;
-    padding: 25px 42px;
-    text-align: center;
-    font-size: 22px;
-    border: 1px solid #4CAF50;
-    border-radius: 8px;
-    -webkit-transition-duration: 0.4s;
-    transition-duration: 0.4s;
-
-    margin-top: 200px;
+.submitButton {
+  background-color: white;
+  color: #F44336;
+  padding: 10px 27px;
+  text-align: center;
+  font-size: 16px;
+  border: 1px solid #F44336;
+  border-radius: 8px;
+  -webkit-transition-duration: 0.4s;
+  transition-duration: 0.4s;
+  margin-top: 10px;
 }
 
-.button1:hover {
-    background-color: #4CAF50;
-    color: white;
-    cursor: pointer;
+.submitButton:hover {
+  background-color: #F44336;
+  color: white;
+  cursor: pointer;
+}
+
+
+.startButton {
+  background-color: white;
+  color: #4CAF50;
+  padding: 25px 42px;
+  text-align: center;
+  font-size: 22px;
+  border: 1px solid #4CAF50;
+  border-radius: 8px;
+  -webkit-transition-duration: 0.4s;
+  transition-duration: 0.4s;
+  margin-top: 200px;
+}
+
+.startButton:hover {
+  background-color: #4CAF50;
+  color: white;
+  cursor: pointer;
+}
+
+/*.formContainer {
+
+}*/
+
+label {
+    margin-right: 10px;
 }

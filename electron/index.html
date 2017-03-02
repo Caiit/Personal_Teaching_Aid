@@ -10,19 +10,34 @@
   <body>
     <h1 id="name"></h1>
     <div id="newStudent">
-      <form id="newStudentForm">
-        First name: <input type="text" id="inputFname" name="fname"></br>
-        Last name: <input type="text" id="inputLname" name="lname"></br>
-        <button type="button" id="submitNewStudent"> Go </button>
-      </form>
+
+      <p id="newStudentText">I don't know you yet. Who are you?</p>
+
+      <center>
+        <form id="newStudentForm">
+          <table id="formContainer">
+            <tr>
+              <th><label>First name:</label></th>
+              <th><input type="text" id="inputFname" name="fname"></br></th>
+            </tr>
+            <tr>
+              <th><label>Last name:</label></th>
+              <th><input type="text" id="inputLname" name="lname"></br></th>
+            </tr>
+          </table>
+            <button type="button" id="submitNewStudent"
+            class="submitButton" button align="bottom">Go</button>
+        </form>
+      </center>
     </div>
 
-    <button type="button" id="start">Start</button>
+    <button type="button" id="start" class="startButton">Start</button>
 
     <div id="problemPart">
       <p id="problem"></p>
       <input type="text" id="inputAnswer"></br>
-      <button type="button" id="submitAnswer"> Check </button>
+      <button type="button" id="submitAnswer">Answer</button>
+      <button type="button" id="nextProblem" button align="right" disabled>Next</button>
     </div>
 
     <p id="done"></p>
