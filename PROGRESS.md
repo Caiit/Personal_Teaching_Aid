@@ -22,7 +22,7 @@ Looked into speech recognition:
   - Sphinx speech recognition
   
 ## 09-02-2017
-Managed to get openface working locally. 
+Managed to get openface working locally: followed the setup by hand from http://cmusatyalab.github.io/openface/setup/
 
 Created our own little dataset and script to test openfaces with a webcam. 
 
