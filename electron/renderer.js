@@ -51,7 +51,6 @@ newUser.addEventListener("click", () => {
 // Get problems
 function getProblems() {
   client.invoke("getNewProblem", (error, problem) => {
-    console.log(problem);
     if (error) {
       console.error(error);
     } else if (problem == "None") {

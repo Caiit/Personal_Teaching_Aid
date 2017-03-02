@@ -3,6 +3,7 @@ from Student import Student
 from ProblemGenerator import ProblemGenerator
 from imageRecognition import recognizeStudent
 from imageRecognition import saveNewUser
+from gtts import gTTS
 import os
 import zerorpc
 
@@ -36,7 +37,7 @@ class Api(object):
     def getStudentInfo(self, studentID):
         self.student = self.database.get(studentID)
         # TODO: deze vanuit ui krijgen
-        n = 1
+        n = 5
         self.getPersonalProblems(n)
 
 
@@ -66,13 +67,23 @@ class Api(object):
     def getNewProblem(self):
         if not self.problems:
             return "None"
-        return self.problems[0][0]
+        problem = self.problems[0][0]
+        self.textToSpeech(problem)
+        return problem
 
 
     def checkAnswer(self, answer):
         if not self.problems:
             return None
-        return eval(self.problems.pop()[0]) == int(answer)
+        return eval(self.problems.pop(0)[0]) == int(answer)
+
+
+    def textToSpeech(self, text):
+        language = "nl"
+        tts = gTTS(text=text, lang=language)
+        tts.save("speech.mp3")
+        os.system("mpg123 speech.mp3")
+
 
     # def checkAnswers(student, problems):
     #     print(student.getOperators())
@@ -110,7 +121,7 @@ def main():
     #     problem = api.getNewProblem()
     #     if problem:
     #         print api.checkAnswer(eval(problem))
-
+    #     print problem
     addr = 'tcp://127.0.0.1:' + str(3006)
     s = zerorpc.Server(Api())
     s.bind(addr)
