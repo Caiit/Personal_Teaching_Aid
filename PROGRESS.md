@@ -63,6 +63,13 @@ It did work (it weren't errors, but warnings?), so we now only supress the error
 ## 22-02-2017
 Looked into text to speech for dutch: https://pypi.python.org/pypi/gTTS
 
+To install gtts:
+> sudo pip install gtts
+
+To install mpg123:
+> sudo apt-get install mpg123
+
+
 ## 23-02-2017
 Creating an GUI with electron (http://electron.atom.io/)
 
