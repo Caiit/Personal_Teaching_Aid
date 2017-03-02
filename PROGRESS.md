@@ -19,7 +19,8 @@ Looked into face recognition:
   - http://hanzratech.in/2015/02/03/face-recognition-using-opencv.html: using opencv, did work, but not that good.
   
 Looked into speech recognition:
-  - Sphinx speech recognition
+  - ~~Sphinx speech recognition~~
+  - Python SpeechRecognition: https://pypi.python.org/pypi/SpeechRecognition/
   
 ## 09-02-2017
 Managed to get openface working locally: followed the setup by hand from http://cmusatyalab.github.io/openface/setup/
