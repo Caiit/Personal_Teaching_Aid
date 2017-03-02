@@ -3,8 +3,10 @@ class Student(object):
     def __init__(self, name, studentID):
         self.name = name
         self.studentID = studentID
+        # Student start with only + as operator and range 0 - 10
         self.val_range = [0,10]
-        self.operators = {'+': [0,0], '-': [0,0]}
+        self.operators = {'+': [0,0]}
+        # self.operators = {'+': [0,0], '-': [0,0]}
 
     def getName(self):
         return self.name
@@ -24,12 +26,12 @@ class Student(object):
 
     def getMin(self):
         return self.val_range[0]
+    
+    def getMax(self):
+        return self.val_range[1]
 
     def setMin(self, min_val):
         self.val_range[0] = min_val
-
-    def getMax(self):
-        return self.val_range[1]
 
     def setMax(self, max_val):
         self.val_range[1] = max_val
