@@ -9,8 +9,24 @@
 
   <body>
     <h1 id="name"></h1>
-    <div id="newStudent">
 
+    <div id="problemPart" style="background-color:blue;">
+      <p id="problem"></p>
+
+      <div style="display: inline-block; background-color:green;">
+        <button type="button" id="submitAnswer" class="problemButton">Answer</button>
+        <button type="button" id="nextProblem" class="problemButton" button align="right" disabled>Next</button>
+      </div>
+
+      <div style="display:inline-block; background-color:yellow">
+        <img src="./img/wrong.png" class="answerImg" id="wrongImg">
+        <img src="./img/correct.png" class="answerImg" id="correctImg">
+      </div>
+
+      <p id="done"></p>
+    </div>
+
+    <div id="newStudent">
       <p id="newStudentText">I don't know you yet. Who are you?</p>
 
       <center>
@@ -32,15 +48,6 @@
     </div>
 
     <button type="button" id="start" class="startButton">Start</button>
-
-    <div id="problemPart">
-      <p id="problem"></p>
-      <input type="text" id="inputAnswer"></br>
-      <button type="button" id="submitAnswer">Answer</button>
-      <button type="button" id="nextProblem" button align="right" disabled>Next</button>
-    </div>
-
-    <p id="done"></p>
 
   </body>
 

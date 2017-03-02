@@ -77,19 +77,30 @@ answer.addEventListener("click", () => {
     }
     // TODO: hier wat mee doen
     if (answeredCorrectly) {
-      document.getElementById("problemPart").style.backgroundColor = "green";
       nextProblem.disabled = false;
+      showImages(answeredCorrectly);
     } else {
-      document.getElementById("problemPart").style.backgroundColor = "red";
       nextProblem.disabled = false;
+      showImages(answeredCorrectly);
     }
   })
 })
+
+// Show an image that indicates whether the student answered correctly
+function showImages(answeredCorrectly) {
+  if (answeredCorrectly) {
+    document.getElementById("correctImg").style.display = "inline-block";
+  } else {
+    document.getElementById("wrongImg").style.display = "inline-block";
+  }
+}
 
 // Go to the next problem
 nextProblem.addEventListener("click", () => {
   getProblems();
   nextProblem.disabled = true;
+  document.getElementById("wrongImg").style.display = "none";
+  document.getElementById("correctImg").style.display = "none";
 })
 
 // // Handle answer (CAITLIN MET INPUT VIA TEXT)
