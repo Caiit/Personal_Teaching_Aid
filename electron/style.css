@@ -2,39 +2,93 @@ body {
     background-color: #ECECEC;
     text-align: center;
     font-family: monospace;
+    font-size: 16px;
 }
 
 h1 {
-    color: white;
+    color: black;
+    font-family: monospace;
 }
 
+label {
+    margin-right: 10px;
+}
 
 #newStudent {
-  background-color: green;
   display: none;
+  margin-top: 50px;
+  font-size: 25px;
 }
 
 #problemPart {
-  background-color: blue;
   display: none;
 }
 
-.button1 {
-    background-color: white;
-    color: #4CAF50;
-    padding: 25px 42px;
-    text-align: center;
-    font-size: 22px;
-    border: 1px solid #4CAF50;
-    border-radius: 8px;
-    -webkit-transition-duration: 0.4s;
-    transition-duration: 0.4s;
-
-    margin-top: 200px;
+.problemButton {
+  background-color: white;
+  color: #008CBA;
+  padding: 10px 27px;
+  text-align: center;
+  font-size: 16px;
+  border: 1px solid #008CBA;
+  border-radius: 8px;
+  -webkit-transition-duration: 0.4s;
+  transition-duration: 0.4s;
+  margin-top: 10px;
 }
 
-.button1:hover {
-    background-color: #4CAF50;
-    color: white;
-    cursor: pointer;
+.problemButton:hover:enabled {
+  background-color: #008CBA;
+  color: white;
+  cursor: pointer;
+}
+
+.problemButton:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.submitButton {
+  background-color: white;
+  color: #F44336;
+  padding: 10px 27px;
+  text-align: center;
+  font-size: 16px;
+  border: 1px solid #F44336;
+  border-radius: 8px;
+  -webkit-transition-duration: 0.4s;
+  transition-duration: 0.4s;
+  margin-top: 10px;
+}
+
+.submitButton:hover {
+  background-color: #F44336;
+  color: white;
+  cursor: pointer;
+}
+
+.startButton {
+  background-color: white;
+  color: #4CAF50;
+  padding: 25px 42px;
+  text-align: center;
+  font-size: 22px;
+  border: 1px solid #4CAF50;
+  border-radius: 8px;
+  -webkit-transition-duration: 0.4s;
+  transition-duration: 0.4s;
+  margin-top: 200px;
+}
+
+.startButton:hover {
+  background-color: #4CAF50;
+  color: white;
+  cursor: pointer;
+}
+
+.answerImg {
+  display: none;
+  position: absolute;
+  right: 0px;
+  /*vertical-align: middle;*/
 }

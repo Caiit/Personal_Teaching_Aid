@@ -11,7 +11,6 @@ client.invoke("echo", "server ready", (error, res) => {
 })
 
 let start = document.getElementById("start")
-start.className = "button1";
 let name = document.querySelector("#name");
 
 // Recognize student
@@ -19,13 +18,16 @@ start.addEventListener("click", () => {
   client.invoke("recognizeStudent", (error, result) => {
     if (error) {
       console.error(error);
-    } else if (result== "") {
+    } else if (result == "") {
       // Show input field
+      document.getElementById("newStudentText").style.display = "block";
       document.getElementById("newStudent").style.display = "block";
+      // start.style.display = "none";
     } else {
       // Show name
       name.textContent = result;
       document.getElementById("newStudent").style.display = "none";
+      // start.style.display = "none";
       getProblems();
     }
   })
@@ -66,19 +68,56 @@ function getProblems() {
 }
 
 // Handle answer
+let nextProblem = document.querySelector("#nextProblem")
 let answer = document.querySelector("#submitAnswer")
 answer.addEventListener("click", () => {
-  var answer = document.getElementById("inputAnswer").value;
-  client.invoke("checkAnswer", answer, (error, result) => {
+  client.invoke("checkAnswer", (error, answeredCorrectly) => {
     if (error) {
       console.error(error);
     }
     // TODO: hier wat mee doen
-    if (result) {
-      document.getElementById("problemPart").style.backgroundColor = "green";
+    if (answeredCorrectly) {
+      nextProblem.disabled = false;
+      showImages(answeredCorrectly);
     } else {
-      document.getElementById("problemPart").style.backgroundColor = "red";
+      nextProblem.disabled = false;
+      showImages(answeredCorrectly);
     }
   })
-  getProblems();
 })
+
+// Show an image that indicates whether the student answered correctly
+function showImages(answeredCorrectly) {
+  if (answeredCorrectly) {
+    document.getElementById("correctImg").style.display = "inline-block";
+  } else {
+    document.getElementById("wrongImg").style.display = "inline-block";
+  }
+}
+
+// Go to the next problem
+nextProblem.addEventListener("click", () => {
+  getProblems();
+  nextProblem.disabled = true;
+  document.getElementById("wrongImg").style.display = "none";
+  document.getElementById("correctImg").style.display = "none";
+})
+
+// // Handle answer (CAITLIN MET INPUT VIA TEXT)
+// let answer = document.querySelector("#submitAnswer")
+// answer.addEventListener("click", () => {
+//   var answer = document.getElementById("inputAnswer").value;
+//   client.invoke("checkAnswer", answer, (error, result) => {
+//     console.log(result)
+//     if (error) {
+//       console.error(error);
+//     }
+//     // TODO: hier wat mee doen
+//     if (result) {
+//       document.getElementById("problemPart").style.backgroundColor = "green";
+//     } else {
+//       document.getElementById("problemPart").style.backgroundColor = "red";
+//     }
+//   })
+//   getProblems();
+// })

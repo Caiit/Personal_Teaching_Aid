@@ -32,6 +32,9 @@ class ProblemGenerator:
             operator = choice(self.operators.keys(), p=[values[3] for values in self.operators.values()])
             a = random.randint(self.min_val, self.max_val)
             b = random.randint(self.min_val, self.max_val)
-            problem = str(a) + operator + str(b)
+            if a > b:
+                problem = str(a) + operator + str(b)
+            else:
+                problem = str(b) + operator + str(a)
             problems.append((problem, operator))
         return problems

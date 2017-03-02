@@ -19,10 +19,11 @@ Looked into face recognition:
   - http://hanzratech.in/2015/02/03/face-recognition-using-opencv.html: using opencv, did work, but not that good.
   
 Looked into speech recognition:
-  - Sphinx speech recognition
+  - ~~Sphinx speech recognition~~
+  - Python SpeechRecognition: https://pypi.python.org/pypi/SpeechRecognition/
   
 ## 09-02-2017
-Managed to get openface working locally. 
+Managed to get openface working locally: followed the setup by hand from http://cmusatyalab.github.io/openface/setup/
 
 Created our own little dataset and script to test openfaces with a webcam. 
 
@@ -61,6 +62,13 @@ It did work (it weren't errors, but warnings?), so we now only supress the error
 
 ## 22-02-2017
 Looked into text to speech for dutch: https://pypi.python.org/pypi/gTTS
+
+To install gtts:
+> sudo pip install gtts
+
+To install mpg123:
+> sudo apt-get install mpg123
+
 
 ## 23-02-2017
 Creating an GUI with electron (http://electron.atom.io/)

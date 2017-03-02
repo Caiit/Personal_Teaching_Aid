@@ -35,17 +35,20 @@ from sklearn.mixture import GMM
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.naive_bayes import GaussianNB
 
+FILEDIR = os.path.dirname(os.path.realpath(__file__))
+
 
 def prepareImages():
     # Delete old cache file
-    if os.path.exists("./aligned-images/cache.t7"):
-        os.remove("./aligned-images/cache.t7")
+    if os.path.exists(FILEDIR + "/aligned-images/cache.t7"):
+        os.remove(FILEDIR + "/aligned-images/cache.t7")
     # Do pose detection and alignment
-    os.system("./util/align-dlib.py ./training-images/ align outerEyesAndNose" +
-    " ./aligned-images/ --size 96")
+    os.system(FILEDIR + "/util/align-dlib.py " + FILEDIR + "/training-images/" +
+        " align outerEyesAndNose " +
+    FILEDIR + "/aligned-images/ --size 96")
     # Generate representations from the aligned images
-    os.system("./batch-represent/main.lua -outDir ./generated-embeddings/ -data"
-    + " ./aligned-images/")
+    os.system(FILEDIR + "/batch-represent/main.lua -outDir " + FILEDIR +
+        "/generated-embeddings/ -data " + FILEDIR + "/aligned-images/")
 
 
 def train(folder, classifier):
@@ -66,10 +69,10 @@ def train(folder, classifier):
         clf = SVC(C=1, kernel='linear', probability=True)
     elif classifier == 'GridSearchSvm':
         print("""
-        Warning: In our experiences, using a grid search over SVM hyper-parameters only
-        gives marginally better performance than a linear SVM with C=1 and
-        is not worth the extra computations of performing a grid search.
-        """)
+        Warning: In our experiences, using a grid search over SVM
+        hyper-parameters only gives marginally better performance than a linear
+        SVM with C=1 and is not worth the extra computations of performing a
+        grid search. """)
         param_grid = [
             {'C': [1, 10, 100, 1000],
              'kernel': ['linear']},
@@ -113,6 +116,6 @@ if __name__ == '__main__':
     # TODO: miss classifier als argument ofzo
     classifier = "LinearSvm"
     prepareImages()
-    train("./generated-embeddings/", classifier)
+    train(FILEDIR + "/generated-embeddings/", classifier)
     # To test the newly trained classifier
     # classify()
