@@ -100,3 +100,7 @@ We worked on the UI. You can now add yourself if the program does not recognize 
 
 We started working on the first draft report.
 
+## 02-03-2017
+Integrated speech recognition into the main program (UI) and worked on UI layout. 
+
+Worked on problem generator. The operators are now randomly chosen based on their probability distribution. An operator that has a high correctness, is asked less often than an operator that has a low correctness.
