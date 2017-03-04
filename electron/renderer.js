@@ -62,7 +62,7 @@ function getProblems() {
       document.getElementById("inputAnswer").style.display = "none";
     } else {
       document.getElementById("problem").textContent = problem;
-      document.getElementById("problemPart").style.display = "block";
+      document.getElementById("problemPart").style.display = "inline-block";
     }
   })
 }

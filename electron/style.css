@@ -22,6 +22,7 @@ label {
 
 #problemPart {
   display: none;
+  width: 350px;
 }
 
 .problemButton {
@@ -88,7 +89,23 @@ label {
 
 .answerImg {
   display: none;
+  float: right;
   position: absolute;
-  right: 0px;
-  /*vertical-align: middle;*/
+}
+
+.problemContainer {
+  text-align: center;
+}
+
+.problemImagesContainer {
+  position: relative;
+  display: inline-block;
+  width: 0; height: 0;
+  vertical-align: top;
+}
+
+.problemImages {
+  display: inline-block;
+  position: absolute;
+  width: 100px;
 }

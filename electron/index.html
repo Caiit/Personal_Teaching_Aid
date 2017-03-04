@@ -10,17 +10,23 @@
   <body>
     <h1 id="name"></h1>
 
-    <div id="problemPart" style="background-color:blue;">
-      <p id="problem"></p>
 
-      <div style="display: inline-block; background-color:green;">
-        <button type="button" id="submitAnswer" class="problemButton">Answer</button>
-        <button type="button" id="nextProblem" class="problemButton" button align="right" disabled>Next</button>
+    <div class="problemContainer">
+      <div id="problemPart">
+        <p id="problem"></p>
+        <div>
+          <button type="button" id="submitAnswer" class="problemButton">
+            Answer</button>
+          <button type="button" id="nextProblem" class="problemButton"
+            button align="right" disabled>Next</button>
+        </div>
       </div>
 
-      <div style="display:inline-block; background-color:yellow">
-        <img src="./img/wrong.png" class="answerImg" id="wrongImg">
-        <img src="./img/correct.png" class="answerImg" id="correctImg">
+      <div class="problemImagesContainer">
+        <div id="problemImages">
+          <img src="./img/wrong.png" class="answerImg" id="wrongImg">
+          <img src="./img/correct.png" class="answerImg" id="correctImg">
+        </div>
       </div>
 
       <p id="done"></p>
