@@ -3,7 +3,7 @@ from Student import Student
 from ProblemGenerator import ProblemGenerator
 from imageRecognition import recognizeStudent
 from imageRecognition import saveNewUser
-from answerRecognition import correct
+from answerRecognition import getResponse, correct
 from gtts import gTTS
 import os
 import zerorpc
@@ -17,6 +17,7 @@ class Api(object):
 
         with open(os.path.join(fileDir, "wordToNumDict.pickle"), "rb") as handle:
             self.w2n = pickle.load(handle)
+
 
     def recognizeStudent(self):
         studentID = recognizeStudent()
@@ -75,12 +76,16 @@ class Api(object):
         return self.problem
 
 
-    def checkAnswer(self):
+    def getResponse(self):
+        return getResponse()
+
+
+    def checkAnswer(self, response):
         if not self.problems:
             return None
         # TODO: Update operators?
         correctAnswer = eval(self.problem)
-        return correct(correctAnswer, self.w2n, 2)
+        return correct(correctAnswer, response, self.w2n, 2)
 
 
     def textToSpeech(self):
