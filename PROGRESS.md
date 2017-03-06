@@ -108,5 +108,6 @@ Worked on problem generator. The operators are now randomly chosen based on thei
 ## 06-03-2017
 Set a 6 second limit on speech recognition listening time to fix electron's TimeOutError. Added a text input field in case the answer is wrong or the program did not understand what was said. 
 
-Still need to implement: a listening gif that indicates when the program is listening, a picture that the user can click if they want to use the Nao instead of a computer
+Still need to implement: a listening gif that indicates when the program is listening, a picture that the user can click if they want to use the Nao instead of a computer: https://community.ald.softbankrobotics.com/en/forum/impossible-subscribe-alaudiodevice-2563
 
+Got the Dutch Text To Speech working on the nao and camera input from the robot. The microphone input seems harder then expected. We need to be able to get the buffer of the microphone input or transfer .wav files from the robot to the program.
