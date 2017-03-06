@@ -56,10 +56,11 @@ function getProblems() {
   client.invoke("getNewProblem", (error, problem) => {
     if (error) {
       console.error(error);
+
     } else if (problem == "None") {
       document.getElementById("done").textContent = "You are finished.";
       answer.style.display = "none";
-      document.getElementById("inputAnswer").style.display = "none";
+      document.getElementById("nextProblem").style.display = "none";
     } else {
       document.getElementById("problem").textContent = problem;
       document.getElementById("problemPart").style.display = "inline-block";
@@ -67,24 +68,63 @@ function getProblems() {
   })
 }
 
-// Handle answer
-let nextProblem = document.querySelector("#nextProblem")
-let answer = document.querySelector("#submitAnswer")
+// Get student's response
+let answer = document.querySelector("#submitAnswer");
 answer.addEventListener("click", () => {
-  client.invoke("checkAnswer", (error, answeredCorrectly) => {
+  var displayValue = inputAnswer.style.display;
+
+  if (displayValue !== "none" && displayValue !== "")  {
+    var givenAnswer = document.getElementById("giveAnswer").value;
+    checkAnswer(givenAnswer);
+  } else {
+    getResponse();
+  }
+})
+
+let inputAnswer = document.querySelector("#inputAnswer");
+function getResponse() {
+  client.invoke("getResponse", (error, response) => {
+    if (error) {
+      console.error(error);
+      inputAnswer.style.display = "block";
+      textToSpeech("Ik heb je niet begrepen");
+    } else if (response !== "Ik heb je niet begrepen" && response != null) {
+        checkAnswer(response)
+    } else {
+      textToSpeech(response);
+      inputAnswer.style.display = "block";
+    }
+  })
+}
+
+// Convert a string to speech that is said out loud
+function textToSpeech(string) {
+  client.invoke("textToSpeech", string, (error) => {
     if (error) {
       console.error(error);
     }
-    // TODO: hier wat mee doen
-    if (answeredCorrectly) {
-      nextProblem.disabled = false;
-      showImages(answeredCorrectly);
+  })
+}
+
+// Handle student's response
+let nextProblem = document.querySelector("#nextProblem");
+function checkAnswer(response) {
+  client.invoke("checkAnswer", response, (error, result) => {
+    document.getElementById("correctImg").style.display = "none";
+    document.getElementById("wrongImg").style.display = "none";
+
+    if (error) {
+      console.error(error);
     } else {
+      var answeredCorrectly = result[0];
+      var message = result[1];
+
       nextProblem.disabled = false;
       showImages(answeredCorrectly);
+      textToSpeech(message);
     }
   })
-})
+}
 
 // Show an image that indicates whether the student answered correctly
 function showImages(answeredCorrectly) {
@@ -92,6 +132,7 @@ function showImages(answeredCorrectly) {
     document.getElementById("correctImg").style.display = "inline-block";
   } else {
     document.getElementById("wrongImg").style.display = "inline-block";
+    inputAnswer.style.display = "block";
   }
 }
 
@@ -101,23 +142,6 @@ nextProblem.addEventListener("click", () => {
   nextProblem.disabled = true;
   document.getElementById("wrongImg").style.display = "none";
   document.getElementById("correctImg").style.display = "none";
+  inputAnswer.reset();
+  inputAnswer.style.display = "none"
 })
-
-// // Handle answer (CAITLIN MET INPUT VIA TEXT)
-// let answer = document.querySelector("#submitAnswer")
-// answer.addEventListener("click", () => {
-//   var answer = document.getElementById("inputAnswer").value;
-//   client.invoke("checkAnswer", answer, (error, result) => {
-//     console.log(result)
-//     if (error) {
-//       console.error(error);
-//     }
-//     // TODO: hier wat mee doen
-//     if (result) {
-//       document.getElementById("problemPart").style.backgroundColor = "green";
-//     } else {
-//       document.getElementById("problemPart").style.backgroundColor = "red";
-//     }
-//   })
-//   getProblems();
-// })

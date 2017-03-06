@@ -25,6 +25,10 @@ label {
   width: 350px;
 }
 
+#inputAnswer {
+  display: none;
+}
+
 .problemButton {
   background-color: white;
   color: #008CBA;

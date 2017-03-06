@@ -14,29 +14,29 @@ def getResponse():
 	r = sr.Recognizer()
 	exception = True
 
-	while(exception):
-		with sr.Microphone(chunk_size=8192) as source: # use the default microphone as the audio source
-			print('What is your answer?')
-			r.adjust_for_ambient_noise(source, duration=1)
-			audio = r.listen(source)
+	while exception:
+		# Use the default microphone as the audio source
+		with sr.Microphone(chunk_size=8192) as source:
+			r.adjust_for_ambient_noise(source, duration=0.5)
+			audio = r.listen(source, timeout=6)
 		try:
 			response  = r.recognize_google(audio, language='nl-NL')
-			print('You said ' + response)
 			return response
-		except LookupError:                            # speech is unintelligible
-			print('Could not understand audio')
+		# Speech is unintelligible
+		except LookupError:
+			return "Ik heb je niet begrepen"
 		except sr.UnknownValueError:
-			print('Could not understand audio')
+			return "Ik heb je niet begrepen"
+		except sr.WaitTimeoutError:
+			return "Ik kon je niet verstaan"
 	return None
 
 def hesitationInResponse(response):
 	indicators = ['geen idee']
 	if (('weet' in response) and ('niet' in response)):
-		print('Weet je het antwoord niet?')
 		return True
 	for s in indicators:
 		if (s in response):
-			print('Weet je het antwoord niet?')
 			return True
 	return False
 
@@ -62,16 +62,13 @@ def answerInResponse(answer, response, w2n):
 			return True
 	return False
 
-def correct(answer, w2n, n):
-	response = getResponse()
+def correct(answer, response, w2n, n):
 	if hesitationInResponse(response):
-		print('You hesitated')
+		return False, "Je twijfelde"
 	elif not answerInResponse(answer, response, w2n):
-		print('Your answer is a number, but incorrect')
+		return False, "Je antwoord is fout"
 	else:
-		print('Your answer is correct')
-		return True
-	return False
+		return True, "Je antwoord is goed"
 
 if __name__ == '__main__':
 	startTime = time.time()

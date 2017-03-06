@@ -72,7 +72,7 @@ class Api(object):
         if not self.problems:
             return "None"
         self.problem = self.problems.pop(0)[0]
-        self.textToSpeech()
+        self.textToSpeech(self.problem)
         return self.problem
 
 
@@ -82,15 +82,15 @@ class Api(object):
 
     def checkAnswer(self, response):
         if not self.problems:
-            return None
+            return False, "None"
         # TODO: Update operators?
         correctAnswer = eval(self.problem)
         return correct(correctAnswer, response, self.w2n, 2)
 
 
-    def textToSpeech(self):
+    def textToSpeech(self, string):
         language = "nl"
-        tts = gTTS(text=self.problem, lang=language)
+        tts = gTTS(text=string, lang=language)
         tts.save("speech.mp3")
         os.system("mpg123 speech.mp3")
 
