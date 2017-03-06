@@ -21,7 +21,7 @@ class ProblemGenerator:
             percentage = 0.000001 if total == 0 else (correct / float(total))
             self.operators[oper] = self.operators[oper] + [percentage]
             totalPercentage += 1 / percentage
-        # operatorProportion = 1 - (operatorPercentage / totalOperatorPercentage)
+        # operatorProportion = 1 / (operatorPercentage / totalOperatorPercentage)
         self.operators = {oper: [self.operators[oper][0], self.operators[oper][1], self.operators[oper][2], ((1 / self.operators[oper][2]) / totalPercentage)] for oper in self.operators}
         print self.operators
 
