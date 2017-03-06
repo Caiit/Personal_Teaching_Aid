@@ -94,7 +94,7 @@ class Api(object):
         language = "nl"
         tts = gTTS(text=string, lang=language)
         tts.save("speech.mp3")
-        if self.robotIP != None:
+        if self.robotIP != "None":
             ttsProxy = ALProxy("ALTextToSpeech", self.robotIP, 9559)
             ttsProxy.setLanguage("Dutch")
             ttsProxy.say(self.problem)
@@ -129,20 +129,20 @@ class Api(object):
 
 
 def main():
-    api = Api()
-    api.recognizeStudent("10.42.0.180")
-    api.textToSpeech()
+    # api = Api()
+    # api.recognizeStudent("None")
+    # api.textToSpeech("hallo")
     # api.getStudentInfo("tirza-soutehakjsdhasdj-0")
     # for i in range(2):
     #     problem = api.getNewProblem()
     #     if problem:
     #         print api.checkAnswer(eval(problem))
     #     print problem
-    # addr = 'tcp://127.0.0.1:' + str(3006)
-    # s = zerorpc.Server(Api())
-    # s.bind(addr)
-    # print('start running on {}'.format(addr))
-    # s.run()
+    addr = 'tcp://127.0.0.1:' + str(3006)
+    s = zerorpc.Server(Api())
+    s.bind(addr)
+    print('start running on {}'.format(addr))
+    s.run()
 
 if __name__ == '__main__':
     main()

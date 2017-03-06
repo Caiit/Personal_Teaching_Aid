@@ -43,7 +43,7 @@ def recognizeStudent(robotIP):
 def identifyPerson(align, net, robotIP):
     ''' Take 10 pictures to identify the person. '''
 
-    if robotIP != None:
+    if robotIP != "None":
         # Get robot video device
         videoDevice = ALProxy('ALVideoDevice', robotIP, 9559)
 
@@ -62,7 +62,7 @@ def identifyPerson(align, net, robotIP):
     picturesTaken = 0
     possiblePersons = collections.Counter()
     while (picturesTaken < 10):
-        if robotIP != None:
+        if robotIP != "None":
             frame = robotWebcam(videoDevice, captureDevice)
         else:
             ret, frame = videoDevice.read()
@@ -85,7 +85,7 @@ def identifyPerson(align, net, robotIP):
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
         picturesTaken += 1
-    if robotIP != None:
+    if robotIP != "None":
         videoDevice.unsubscribe(captureDevice)
     else:
         videoDevice.release()

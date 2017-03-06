@@ -15,7 +15,7 @@ let name = document.querySelector("#name");
 let ip = "10.42.0.180" // TODO: deze moet variable
 // Recognize student
 start.addEventListener("click", () => {
-  client.invoke("recognizeStudent", ip, (error, result) => {
+  client.invoke("recognizeStudent", "None", (error, result) => {
     if (error) {
       console.error(error);
     } else if (result == "") {
