@@ -12,10 +12,10 @@ client.invoke("echo", "server ready", (error, res) => {
 
 let start = document.getElementById("start")
 let name = document.querySelector("#name");
-
+let ip = "10.42.0.180" // TODO: deze moet variable
 // Recognize student
 start.addEventListener("click", () => {
-  client.invoke("recognizeStudent", (error, result) => {
+  client.invoke("recognizeStudent", ip, (error, result) => {
     if (error) {
       console.error(error);
     } else if (result == "") {
