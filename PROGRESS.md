@@ -104,3 +104,9 @@ We started working on the first draft report.
 Integrated speech recognition into the main program (UI) and worked on UI layout. 
 
 Worked on problem generator. The operators are now randomly chosen based on their probability distribution. An operator that has a high correctness, is asked less often than an operator that has a low correctness.
+
+## 06-03-2017
+Set a 6 second limit on speech recognition listening time to fix electron's TimeOutError. Added a text input field in case the answer is wrong or the program did not understand what was said. 
+
+Still need to implement: a listening gif that indicates when the program is listening, a picture that the user can click if they want to use the Nao instead of a computer
+
