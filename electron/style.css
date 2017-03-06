@@ -29,6 +29,24 @@ label {
   display: none;
 }
 
+#noNaoImg {
+  height: auto;
+  width: auto;
+  max-width: 200px;
+  max-height: 200px;
+  background: url(./img/nao.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 275px;
+}
+
+#naoImg {
+  height: auto;
+  width: auto;
+  max-width: 275px;
+  max-height: 275px;
+}
+
 .problemButton {
   background-color: white;
   color: #008CBA;
