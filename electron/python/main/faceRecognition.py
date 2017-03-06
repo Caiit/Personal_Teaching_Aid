@@ -10,6 +10,8 @@ import collections
 import numpy as np
 import openface
 
+from naoqi import ALProxy
+
 np.set_printoptions(precision=2)
 
 IMG_DIM = 96
@@ -19,7 +21,7 @@ THRESHOLD = 0.65
 
 FILEDIR = os.path.dirname(os.path.realpath(__file__))
 
-def recognizeStudent():
+def recognizeStudent(robotIP):
     ''' Recognize the student in front of the webcam. '''
 
     # Load the directories and neural network
@@ -35,21 +37,35 @@ def recognizeStudent():
     align = openface.AlignDlib(dlibFacePredictor)
     net = openface.TorchNeuralNet(networkModel, imgDim=IMG_DIM, cuda=cuda)
 
-    return identifyPerson(align, net)
+    return identifyPerson(align, net, robotIP)
 
 
-def identifyPerson(align, net):
+def identifyPerson(align, net, robotIP):
     ''' Take 10 pictures to identify the person. '''
 
-    video_capture = cv2.VideoCapture(0)
-    video_capture.set(3, WIDTH)
-    video_capture.set(4, HEIGHT)
+    if robotIP != None:
+        # Get robot video device
+        videoDevice = ALProxy('ALVideoDevice', robotIP, 9559)
+
+        # subscribe top camera
+        AL_kTopCamera = 0
+        AL_kQVGA = 1            # 320x240
+        AL_kBGRColorSpace = 13
+        captureDevice = videoDevice.subscribeCamera(
+            "nao", AL_kTopCamera, AL_kQVGA, AL_kBGRColorSpace, 10)
+    else:
+        videoDevice = cv2.VideoCapture(0)
+        videoDevice.set(3, WIDTH)
+        videoDevice.set(4, HEIGHT)
 
     # Check if person is known
     picturesTaken = 0
     possiblePersons = collections.Counter()
     while (picturesTaken < 10):
-        ret, frame = video_capture.read()
+        if robotIP != None:
+            frame = robotWebcam(videoDevice, captureDevice)
+        else:
+            ret, frame = videoDevice.read()
         persons, confidences = infer(frame, align, net)
 
         # If no person is detected, take an extra picture
@@ -69,11 +85,32 @@ def identifyPerson(align, net):
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
         picturesTaken += 1
-    video_capture.release()
+    if robotIP != None:
+        videoDevice.unsubscribe(captureDevice)
+    else:
+        videoDevice.release()
     cv2.destroyAllWindows()
 
     person = possiblePersons.most_common(1)[0][0]
     return person
+
+
+def robotWebcam(videoDevice, captureDevice):
+    ''' Get an image from the robot. '''
+
+    result = videoDevice.getImageRemote(captureDevice)
+
+    if result == None:
+        print 'Cannot capture.'
+    elif result[6] == None:
+        print 'No image data string.'
+    else:
+        # Create image
+        values = map(ord, list(result[6]))
+        image = np.zeros((HEIGHT, WIDTH, 3), np.uint8)
+        image = np.reshape(values, (HEIGHT, WIDTH,3)).astype('uint8')
+    return image
+
 
 
 def infer(img, align, net):
@@ -178,6 +215,4 @@ def takePictures(n, directory):
 
 
 if __name__ == '__main__':
-    recognizeStudent()
-    while True:
-        continue
+    recognizeStudent("10.42.0.180")

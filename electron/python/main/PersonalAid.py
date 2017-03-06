@@ -1,12 +1,13 @@
 import pickle
 from Student import Student
 from ProblemGenerator import ProblemGenerator
-from imageRecognition import recognizeStudent
-from imageRecognition import saveNewUser
+from faceRecognition import recognizeStudent
+from faceRecognition import saveNewUser
 from answerRecognition import getResponse, correct
 from gtts import gTTS
 import os
 import zerorpc
+from naoqi import ALProxy
 
 class Api(object):
 
@@ -19,8 +20,9 @@ class Api(object):
             self.w2n = pickle.load(handle)
 
 
-    def recognizeStudent(self):
-        studentID = recognizeStudent()
+    def recognizeStudent(self, robotIP):
+        self.robotIP = str(robotIP)
+        studentID = recognizeStudent(self.robotIP)
         name = ""
         if studentID is not "_unknown":
             self.getStudentInfo(studentID)
@@ -92,7 +94,12 @@ class Api(object):
         language = "nl"
         tts = gTTS(text=self.problem, lang=language)
         tts.save("speech.mp3")
-        os.system("mpg123 speech.mp3")
+        if self.robotIP != None:
+            ttsProxy = ALProxy("ALTextToSpeech", self.robotIP, 9559)
+            ttsProxy.setLanguage("Dutch")
+            ttsProxy.say(self.problem)
+        else:
+            os.system("mpg123 speech.mp3")
 
 
     # def checkAnswers(student, problems):
@@ -122,18 +129,20 @@ class Api(object):
 
 
 def main():
-#     # api = Api()
-#     # api.getStudentInfo("tirza-soutehakjsdhasdj-0")
-#     # for i in range(2):
-#     #     problem = api.getNewProblem()
-#     #     if problem:
-#     #         print api.checkAnswer(eval(problem))
-#     #     print problem
-    addr = 'tcp://127.0.0.1:' + str(3006)
-    s = zerorpc.Server(Api())
-    s.bind(addr)
-    print('start running on {}'.format(addr))
-    s.run()
+    api = Api()
+    api.recognizeStudent("10.42.0.180")
+    api.textToSpeech()
+    # api.getStudentInfo("tirza-soutehakjsdhasdj-0")
+    # for i in range(2):
+    #     problem = api.getNewProblem()
+    #     if problem:
+    #         print api.checkAnswer(eval(problem))
+    #     print problem
+    # addr = 'tcp://127.0.0.1:' + str(3006)
+    # s = zerorpc.Server(Api())
+    # s.bind(addr)
+    # print('start running on {}'.format(addr))
+    # s.run()
 
 if __name__ == '__main__':
     main()
