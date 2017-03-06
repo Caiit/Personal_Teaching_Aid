@@ -84,20 +84,20 @@ class Api(object):
 
     def checkAnswer(self, response):
         if not self.problems:
-            return False, "None"
+            return False, "Hier gaat iets fout"
         # TODO: Update operators?
         correctAnswer = eval(self.problem)
         return correct(correctAnswer, response, self.w2n, 2)
 
 
-    def textToSpeech(self, string):
+    def textToSpeech(self, text):
         language = "nl"
-        tts = gTTS(text=string, lang=language)
+        tts = gTTS(text=text, lang=language)
         tts.save("speech.mp3")
         if self.robotIP != "None":
             ttsProxy = ALProxy("ALTextToSpeech", self.robotIP, 9559)
             ttsProxy.setLanguage("Dutch")
-            ttsProxy.say(self.problem)
+            ttsProxy.say(text)
         else:
             os.system("mpg123 speech.mp3")
 
