@@ -1,5 +1,5 @@
 body {
-    background-color: #ECECEC;
+    background-color: #E3E3E3;
     text-align: center;
     font-family: monospace;
     font-size: 16px;
@@ -29,22 +29,20 @@ label {
   display: none;
 }
 
-#noNaoImg {
-  height: auto;
-  width: auto;
-  max-width: 200px;
-  max-height: 200px;
-  background: url(./img/nao.png);
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 275px;
+#naoImg {
+  display: inline-block;
+  margin: auto;
+  margin-right: 15px;
+  cursor: pointer;
+  cursor: hand;
 }
 
-#naoImg {
-  height: auto;
-  width: auto;
-  max-width: 275px;
-  max-height: 275px;
+#noNaoImg {
+  display: inline-block;
+  margin: auto;
+  margin-left: 15px;
+  cursor: pointer;
+  cursor: hand;
 }
 
 .problemButton {
@@ -130,4 +128,11 @@ label {
   display: inline-block;
   position: absolute;
   width: 100px;
+}
+
+.naoContainer {
+  width: 100%;
+  width: 100vw;
+  white-space: nowrap;
+  margin-top: 30px;
 }

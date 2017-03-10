@@ -10,11 +10,51 @@ client.invoke("echo", "server ready", (error, res) => {
   }
 })
 
-let start = document.getElementById("start")
+let start = document.getElementById("start");
 let name = document.querySelector("#name");
-let ip = "10.42.0.180" // TODO: deze moet variable
 // Recognize student
 start.addEventListener("click", () => {
+  client.invoke("recognizeStudent", "None", (error, result) => {
+    if (error) {
+      console.error(error);
+    } else if (result == "") {
+      // Show input field
+      document.getElementById("newStudentText").style.display = "block";
+      document.getElementById("newStudent").style.display = "block";
+      // start.style.display = "none";
+    } else {
+      // Show name
+      name.textContent = result;
+      document.getElementById("newStudent").style.display = "none";
+      // start.style.display = "none";
+      getProblems();
+    }
+  })
+})
+
+let ip = "10.42.0.180" // TODO: deze moet variable
+let naoProgram = document.getElementById("naoImg");
+naoProgram.addEventListener("click", () => {
+  client.invoke("recognizeStudent", ip, (error, result) => {
+    if (error) {
+      console.error(error);
+    } else if (result == "") {
+      // Show input field
+      document.getElementById("newStudentText").style.display = "block";
+      document.getElementById("newStudent").style.display = "block";
+      // start.style.display = "none";
+    } else {
+      // Show name
+      name.textContent = result;
+      document.getElementById("newStudent").style.display = "none";
+      // start.style.display = "none";
+      getProblems();
+    }
+  })
+})
+
+let noNaoProgram = document.getElementById("noNaoImg");
+noNaoProgram.addEventListener("click", () => {
   client.invoke("recognizeStudent", "None", (error, result) => {
     if (error) {
       console.error(error);
