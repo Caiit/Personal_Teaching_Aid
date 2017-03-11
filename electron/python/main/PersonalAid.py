@@ -22,9 +22,9 @@ class Api(object):
 
     def recognizeStudent(self, robotIP):
         self.robotIP = str(robotIP)
-        # studentID = recognizeStudent(self.robotIP)
+        studentID = recognizeStudent(self.robotIP)
         name = ""
-        studentID = "Tirza-Soute-0"
+        # studentID = "Tirza-Soute-0"
         if studentID is not "_unknown":
             self.getStudentInfo(studentID)
             name = self.student.getName()
