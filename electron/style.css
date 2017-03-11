@@ -23,6 +23,7 @@ label {
 #problemPart {
   display: none;
   width: 350px;
+  background-color: blue;
 }
 
 #inputAnswer {
@@ -107,20 +108,16 @@ label {
   cursor: pointer;
 }
 
-.answerImg {
-  display: none;
-  float: right;
-  position: absolute;
-}
-
 .problemContainer {
   text-align: center;
+  background-color: yellow;
 }
 
 .problemImagesContainer {
   position: relative;
   display: inline-block;
-  width: 0; height: 0;
+  width: 0;
+  height: 0;
   vertical-align: top;
 }
 
@@ -130,9 +127,38 @@ label {
   width: 100px;
 }
 
+.answerImg {
+  display: none;
+  float: right;
+  position: absolute;
+  background-color: red;
+}
+
 .naoContainer {
   width: 100%;
   width: 100vw;
   white-space: nowrap;
   margin-top: 30px;
+}
+
+.listeningImageContainer {
+  position: relative;
+  display: inline-block;
+  width: 0;
+  height: 0;
+  vertical-align: top;
+}
+
+.listeningImage {
+  display: inline-block;
+  position: absolute;
+  width: 100px;
+}
+
+#listeningImg {
+  display: none;
+  position:absolute;
+  max-width: 90px;
+  max-height: 90px;
+  float: left;
 }

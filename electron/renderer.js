@@ -21,12 +21,12 @@ start.addEventListener("click", () => {
       // Show input field
       document.getElementById("newStudentText").style.display = "block";
       document.getElementById("newStudent").style.display = "block";
-      // start.style.display = "none";
+      hideStartButtons();
     } else {
       // Show name
       name.textContent = result;
       document.getElementById("newStudent").style.display = "none";
-      // start.style.display = "none";
+      hideStartButtons();
       getProblems();
     }
   })
@@ -34,6 +34,7 @@ start.addEventListener("click", () => {
 
 let ip = "10.42.0.180" // TODO: deze moet variable
 let naoProgram = document.getElementById("naoImg");
+let noNaoProgram = document.getElementById("noNaoImg");
 naoProgram.addEventListener("click", () => {
   client.invoke("recognizeStudent", ip, (error, result) => {
     if (error) {
@@ -42,18 +43,23 @@ naoProgram.addEventListener("click", () => {
       // Show input field
       document.getElementById("newStudentText").style.display = "block";
       document.getElementById("newStudent").style.display = "block";
-      // start.style.display = "none";
+      hideStartButtons();
     } else {
       // Show name
       name.textContent = result;
       document.getElementById("newStudent").style.display = "none";
-      // start.style.display = "none";
+      hideStartButtons();
       getProblems();
     }
   })
 })
 
-let noNaoProgram = document.getElementById("noNaoImg");
+function hideStartButtons() {
+  naoProgram.style.display = "none";
+  noNaoProgram.style.display = "none";
+  // start.style.display = "none";
+}
+
 noNaoProgram.addEventListener("click", () => {
   client.invoke("recognizeStudent", "None", (error, result) => {
     if (error) {
@@ -62,12 +68,12 @@ noNaoProgram.addEventListener("click", () => {
       // Show input field
       document.getElementById("newStudentText").style.display = "block";
       document.getElementById("newStudent").style.display = "block";
-      // start.style.display = "none";
+      hideStartButtons();
     } else {
       // Show name
       name.textContent = result;
       document.getElementById("newStudent").style.display = "none";
-      // start.style.display = "none";
+      hideStartButtons();
       getProblems();
     }
   })
@@ -123,14 +129,21 @@ answer.addEventListener("click", () => {
 
 let inputAnswer = document.querySelector("#inputAnswer");
 function getResponse() {
+  var listeningImg = document.getElementById("listeningImg")
+  listeningImg.style.display = "block";
+
   client.invoke("getResponse", (error, response) => {
     if (error) {
+      listeningImg.style.display = "none";
       console.error(error);
       inputAnswer.style.display = "block";
       textToSpeech("Ik heb je niet begrepen");
-    } else if (response !== "Ik heb je niet begrepen" && response != null) {
+    } else if (response !== "Ik heb je niet begrepen" &&
+      response !== "Ik kon je niet verstaan" && response != null) {
+        listeningImg.style.display = "none";
         checkAnswer(response)
     } else {
+      listeningImg.style.display = "none";
       textToSpeech(response);
       inputAnswer.style.display = "block";
     }

@@ -7,7 +7,7 @@ from answerRecognition import getResponse, correct
 from gtts import gTTS
 import os
 import zerorpc
-from naoqi import ALProxy
+# from naoqi import ALProxy
 
 class Api(object):
 
@@ -22,8 +22,9 @@ class Api(object):
 
     def recognizeStudent(self, robotIP):
         self.robotIP = str(robotIP)
-        studentID = recognizeStudent(self.robotIP)
+        # studentID = recognizeStudent(self.robotIP)
         name = ""
+        studentID = "Tirza-Soute-0"
         if studentID is not "_unknown":
             self.getStudentInfo(studentID)
             name = self.student.getName()
