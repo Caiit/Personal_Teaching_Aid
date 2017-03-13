@@ -115,4 +115,6 @@ Got the Dutch Text To Speech working on the nao and camera input from the robot.
 ## 10-03-2017
 Added the listening gif and fixed the style of the robot/program indication images, also linked this to the program so that the right version of the program starts when an image is clicked.
 
-Found an error: if the answer that has to be given is 0, the program gives an error.
+Implement:
+- Found an error: if the answer that has to be given is 0, the GUI gives an error.
+- Pop up dialog when the robot icon is clicked to give in the robot's IP address
