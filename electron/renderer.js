@@ -43,9 +43,10 @@ function getIpAddress() {
 
   document.getElementById("giveIp").addEventListener("click", () => {
     ip = inputIpAddress();
-    
+
     if (ip != null && ip !== "") {
       document.getElementById("getIp").style.display = "none";
+      console.log(ip);
       startNaoProgram(ip);
     }
   })
