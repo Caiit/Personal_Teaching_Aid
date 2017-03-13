@@ -165,3 +165,8 @@ label {
   height: 90px;
   float: left;
 }
+
+#getIp {
+  margin-top: 20px;
+  display: none;
+}

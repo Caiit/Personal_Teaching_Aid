@@ -10,32 +10,54 @@ client.invoke("echo", "server ready", (error, res) => {
   }
 })
 
-let start = document.getElementById("start");
+// let start = document.getElementById("start");
 let name = document.querySelector("#name");
-// Recognize student
-start.addEventListener("click", () => {
-  client.invoke("recognizeStudent", "None", (error, result) => {
-    if (error) {
-      console.error(error);
-    } else if (result == "") {
-      // Show input field
-      document.getElementById("newStudentText").style.display = "block";
-      document.getElementById("newStudent").style.display = "block";
-      hideStartButtons();
-    } else {
-      // Show name
-      name.textContent = result;
-      document.getElementById("newStudent").style.display = "none";
-      hideStartButtons();
-      getProblems();
-    }
-  })
+// // Recognize student
+// start.addEventListener("click", () => {
+//   client.invoke("recognizeStudent", "None", (error, result) => {
+//     if (error) {
+//       console.error(error);
+//     } else if (result == "") {
+//       // Show input field
+//       document.getElementById("newStudentText").style.display = "block";
+//       document.getElementById("newStudent").style.display = "block";
+//       hideStartButtons();
+//     } else {
+//       // Show name
+//       name.textContent = result;
+//       document.getElementById("newStudent").style.display = "none";
+//       hideStartButtons();
+//       getProblems();
+//     }
+//   })
+// })
+
+let naoProgram = document.getElementById("naoImg");
+naoProgram.addEventListener("click", () => {
+  getIpAddress();
 })
 
-let ip = "10.42.0.180" // TODO: deze moet variable
-let naoProgram = document.getElementById("naoImg");
-let noNaoProgram = document.getElementById("noNaoImg");
-naoProgram.addEventListener("click", () => {
+// Use an input field to get the robot's IP address
+function getIpAddress() {
+  document.getElementById("getIp").style.display = "block";
+
+  document.getElementById("giveIp").addEventListener("click", () => {
+    ip = inputIpAddress();
+    
+    if (ip != null && ip !== "") {
+      document.getElementById("getIp").style.display = "none";
+      startNaoProgram(ip);
+    }
+  })
+}
+
+// Get the IP address that the user put in
+function inputIpAddress() {
+  return document.getElementById("inputIp").value;
+}
+
+// Start the program with the Nao robot
+function startNaoProgram(ip) {
   client.invoke("recognizeStudent", ip, (error, result) => {
     if (error) {
       console.error(error);
@@ -52,7 +74,7 @@ naoProgram.addEventListener("click", () => {
       getProblems();
     }
   })
-})
+}
 
 function hideStartButtons() {
   naoProgram.style.display = "none";
@@ -60,6 +82,7 @@ function hideStartButtons() {
   // start.style.display = "none";
 }
 
+let noNaoProgram = document.getElementById("noNaoImg");
 noNaoProgram.addEventListener("click", () => {
   client.invoke("recognizeStudent", "None", (error, result) => {
     if (error) {
