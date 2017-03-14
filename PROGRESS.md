@@ -118,11 +118,10 @@ Added the listening gif and fixed the style of the robot/program indication imag
 ## 13-03-2017
 Implemented an input field where the user can give the robot's IP address.
 
+## 14-03-2017
+Hardcoded the operators so that they are pronounced correctly: e.g. "-" pronounced as "min" instead of "tot". Changed answerRecognition.py so that the WaitTimeOutError is caught. Added robot behaviors: the user is greeted when the program starts and at the end of the session, the user is given feedback -> still needs to be connected with the new problem generator so that it gives feedback corresponding to how well the user performed.
+
 Implement:
-- Found an error: if the answer that has to be given is 0, the GUI gives an error
 - Robot says "Hello", "I don't know you yet", etc.
 - English language option?
 - Nao gives the student feedback at the end of the session based on the student's level update: "Well done!" \*Nao cheers\* or "I bet it will go better next time"
-
-## 14-03-2017
-Hardcoded the operators so that they are pronounced correctly: e.g. "-" pronounced as "min" instead of "tot".
