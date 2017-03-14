@@ -18,7 +18,10 @@ def getResponse():
 		# Use the default microphone as the audio source
 		with sr.Microphone(chunk_size=8192) as source:
 			r.adjust_for_ambient_noise(source, duration=0.5)
-			audio = r.listen(source, timeout=6)
+			try:
+				audio = r.listen(source, timeout=6)
+			except sr.WaitTimeoutError:
+				return "Ik kon je niet verstaan"
 		try:
 			response  = r.recognize_google(audio, language='nl-NL')
 			return response
@@ -27,8 +30,6 @@ def getResponse():
 			return "Ik heb je niet begrepen"
 		except sr.UnknownValueError:
 			return "Ik heb je niet begrepen"
-		except sr.WaitTimeoutError:
-			return "Ik kon je niet verstaan"
 	return None
 
 def hesitationInResponse(response):
@@ -76,6 +77,7 @@ if __name__ == '__main__':
 	fileDir = os.path.dirname(os.path.realpath(__file__))
 	with open(os.path.join(fileDir, "wordToNumDict.pickle"), "rb") as handle:
 		w2n = pickle.load(handle)
-	correct(2, w2n, 2)
+	response = getResponse()
+	correct(2, response, w2n, 2)
 
 	print time.time() - startTime
