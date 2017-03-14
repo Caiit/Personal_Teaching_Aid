@@ -25,6 +25,7 @@ class Api(object):
         studentID = recognizeStudent(self.robotIP)
         name = ""
         # studentID = "Tirza-Soute-0"
+        # studentID = "_unknown"
         if studentID is not "_unknown":
             self.getStudentInfo(studentID)
             name = self.student.getName()
@@ -72,7 +73,7 @@ class Api(object):
 
 
     def getNewProblem(self):
-        if not self.problems:
+        if len(self.problems) == 0:
             return "None"
         self.problem = self.problems.pop(0)[0]
         self.textToSpeech(self.problem)
@@ -84,8 +85,6 @@ class Api(object):
 
 
     def checkAnswer(self, response):
-        if not self.problems:
-            return False, "Hier gaat iets fout"
         # TODO: Update operators?
         correctAnswer = eval(self.problem)
         return correct(correctAnswer, response, self.w2n, 2)
@@ -134,6 +133,7 @@ class Api(object):
 # if __name__== '__main__':
 #     Api().recognizeStudent("None")
 #     Api().getNewProblem()
+#     Api().checkAnswer("0")
     # checkAnswer(student, problems)
     # saveStudent(student)
 

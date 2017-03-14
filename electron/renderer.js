@@ -127,7 +127,8 @@ function getProblems() {
       console.error(error);
 
     } else if (problem == "None") {
-      document.getElementById("done").textContent = "You are finished.";
+      document.getElementById("done").textContent = "Je bent klaar!";
+      document.getElementById("problem").style.display = "none";
       answer.style.display = "none";
       document.getElementById("nextProblem").style.display = "none";
     } else {
