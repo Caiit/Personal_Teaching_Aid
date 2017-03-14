@@ -37,6 +37,12 @@ naoProgram.addEventListener("click", () => {
   getIpAddress();
 })
 
+let cancelNaoProgram = document.getElementById("cancelIp");
+cancelNaoProgram.addEventListener("click", () => {
+  document.getElementById("askNaoContainer").style.display = "block";
+  document.getElementById("getIp").style.display = "none";
+})
+
 // Use an input field to get the robot's IP address
 function getIpAddress() {
   document.getElementById("askNaoContainer").style.display = "none";
@@ -86,10 +92,11 @@ newUser.addEventListener("click", () => {
   client.invoke("addNewUser", fName, lName, (error) => {
     if (error) {
       console.error(error);
+    } else {
+      // Show name
+      name.textContent = fName + " " + lName;
+      document.getElementById("newStudent").style.display = "none";
     }
-    // Show name
-    name.textContent = fName + " " + lName;
-    document.getElementById("newStudent").style.display = "none";
   })
   getProblems();
 })
@@ -100,7 +107,6 @@ function getProblems() {
   client.invoke("getNewProblem", (error, problem) => {
     if (error) {
       console.error(error);
-
     } else if (problem == "None") {
       document.getElementById("done").textContent = "Je bent klaar!";
       document.getElementById("problem").style.display = "none";
@@ -135,7 +141,6 @@ function getResponse() {
     if (error) {
       listeningImg.style.display = "none";
       console.error(error);
-      console.log("in error");
       inputAnswer.style.display = "block";
     } else if (response != "Ik heb je niet begrepen" &&
       response != "Ik kon je niet verstaan" && response != null) {
@@ -145,7 +150,6 @@ function getResponse() {
       listeningImg.style.display = "none";
       textToSpeech(response);
       inputAnswer.style.display = "block";
-      console.log("in string error");
     }
   })
 }
@@ -178,7 +182,6 @@ function checkAnswer(response) {
       } else {
         getProblems();
       }
-
       nextProblem.disabled = false;
     }
   })
