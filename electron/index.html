@@ -7,6 +7,23 @@
     <link rel="stylesheet" type="text/css" href="style.css">
   </head>
 
+  <div id=startUpScreen>
+    <div id="askNaoContainer">
+      <p id="askNaoText">Hebben jullie een Nao robot?</p>
+
+      <div class="naoContainer">
+        <img src="./img/nao.png" id="naoImg">
+        <img src="./img/noNao.png" id="noNaoImg">
+      </div>
+    </div>
+
+    <div id="getIp">
+      <p>Wat is het IP-adres van de robot?</p>
+      <input type="text" id="inputIp">
+      <button type="button" id="giveIp">OK</button>
+    </div>
+  </div>
+
   <body>
     <h1 id="name"></h1>
 
@@ -66,17 +83,6 @@
     </div>
 
     <!-- <button type="button" id="start" class="startButton">Start</button> -->
-
-    <div class="naoContainer">
-      <img src="./img/nao.png" id="naoImg">
-      <img src="./img/noNao.png" id="noNaoImg">
-    </div>
-
-    <div id="getIp">
-      <p>Wat is het IP-adres van de Nao?</p>
-      <input type="text" id="inputIp">
-      <button type="button" id="giveIp">OK</button>
-    </div>
 
   </body>
 

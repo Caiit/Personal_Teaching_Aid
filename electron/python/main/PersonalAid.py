@@ -8,6 +8,7 @@ from gtts import gTTS
 import os
 import zerorpc
 from naoqi import ALProxy
+import time
 
 class Api(object):
 
@@ -22,14 +23,30 @@ class Api(object):
 
     def recognizeStudent(self, robotIP):
         self.robotIP = str(robotIP)
-        studentID = recognizeStudent(self.robotIP)
+        if self.robotIP != "None":
+            self.robotBehavior(True, "animations/Stand/Gestures/Hey_4",
+                str("Hallo ik ben Noa"))
+
+        # studentID = recognizeStudent(self.robotIP)
         name = ""
-        # studentID = "Tirza-Soute-0"
+        studentID = "Tirza-Soute-0"
         # studentID = "_unknown"
         if studentID is not "_unknown":
             self.getStudentInfo(studentID)
             name = self.student.getName()
         return name
+
+
+    def robotBehavior(self, parallel, behavior, text):
+        manager = ALProxy("ALBehaviorManager", self.robotIP, 9559)
+
+        if manager.isBehaviorInstalled(behavior):
+            if not manager.isBehaviorRunning(behavior):
+                if parallel:
+                    manager.post.runBehavior(behavior)
+                else:
+                    manager.runBehavior(behavior)
+                self.textToSpeech(text)
 
 
     def addNewUser(self, firstName, lastName):
@@ -74,7 +91,9 @@ class Api(object):
 
     def getNewProblem(self):
         if len(self.problems) == 0:
-            return "None"
+            self.robotBehavior(False,
+                "animations/Stand/Emotions/Positive/Happy_3",
+                str("Je bent klaar. Goed gedaan!"))
         self.problem = self.problems.pop(0)[0]
         self.textToSpeech(self.problem)
         return self.problem
@@ -131,23 +150,24 @@ class Api(object):
 
 
 # if __name__== '__main__':
-#     Api().recognizeStudent("None")
-#     Api().getNewProblem()
-#     Api().checkAnswer("0")
+#     Api().recognizeStudent("146.50.60.13")
+#     Api().moveRobot("animations/Stand/Gestures/Hey_4")
+    # Api().getNewProblem()
+    # Api().checkAnswer("0")
     # checkAnswer(student, problems)
     # saveStudent(student)
 
 
 def main():
-#     # api = Api()
-#     # api.recognizeStudent("None")
-#     # api.textToSpeech("hallo")
-#     # api.getStudentInfo("tirza-soutehakjsdhasdj-0")
-#     # for i in range(2):
-#     #     problem = api.getNewProblem()
-#     #     if problem:
-#     #         print api.checkAnswer(eval(problem))
-#     #     print problem
+# #     # api = Api()
+# #     # api.recognizeStudent("None")
+# #     # api.textToSpeech("hallo")
+# #     # api.getStudentInfo("tirza-soutehakjsdhasdj-0")
+# #     # for i in range(2):
+# #     #     problem = api.getNewProblem()
+# #     #     if problem:
+# #     #         print api.checkAnswer(eval(problem))
+# #     #     print problem
     addr = 'tcp://127.0.0.1:' + str(3006)
     s = zerorpc.Server(Api())
     s.bind(addr)

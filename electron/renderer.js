@@ -39,25 +39,25 @@ naoProgram.addEventListener("click", () => {
 
 // Use an input field to get the robot's IP address
 function getIpAddress() {
+  document.getElementById("askNaoContainer").style.display = "none";
   document.getElementById("getIp").style.display = "block";
 
   document.getElementById("giveIp").addEventListener("click", () => {
-    ip = inputIpAddress();
+    ip = document.getElementById("inputIp").value;
 
     if (ip != null && ip !== "") {
       document.getElementById("getIp").style.display = "none";
-      startNaoProgram(ip);
+      startProgram(ip);
     }
   })
 }
 
-// Get the IP address that the user put in
-function inputIpAddress() {
-  return document.getElementById("inputIp").value;
-}
+let noNaoProgram = document.getElementById("noNaoImg");
+noNaoProgram.addEventListener("click", () => {
+  startProgram("None");
+})
 
-// Start the program with the Nao robot
-function startNaoProgram(ip) {
+function startProgram(ip) {
   client.invoke("recognizeStudent", ip, (error, result) => {
     if (error) {
       console.error(error);
@@ -65,42 +65,16 @@ function startNaoProgram(ip) {
       // Show input field
       document.getElementById("newStudentText").style.display = "block";
       document.getElementById("newStudent").style.display = "block";
-      hideStartButtons();
+      document.getElementById("startUpScreen").style.display = "none";
     } else {
       // Show name
       name.textContent = result;
       document.getElementById("newStudent").style.display = "none";
-      hideStartButtons();
+      document.getElementById("startUpScreen").style.display = "none";
       getProblems();
     }
   })
 }
-
-function hideStartButtons() {
-  naoProgram.style.display = "none";
-  noNaoProgram.style.display = "none";
-  // start.style.display = "none";
-}
-
-let noNaoProgram = document.getElementById("noNaoImg");
-noNaoProgram.addEventListener("click", () => {
-  client.invoke("recognizeStudent", "None", (error, result) => {
-    if (error) {
-      console.error(error);
-    } else if (result == "") {
-      // Show input field
-      document.getElementById("newStudentText").style.display = "block";
-      document.getElementById("newStudent").style.display = "block";
-      hideStartButtons();
-    } else {
-      // Show name
-      name.textContent = result;
-      document.getElementById("newStudent").style.display = "none";
-      hideStartButtons();
-      getProblems();
-    }
-  })
-})
 
 // Add new user
 let newUser = document.querySelector("#submitNewStudent")
@@ -122,6 +96,7 @@ newUser.addEventListener("click", () => {
 
 // Get problems
 function getProblems() {
+  // document.getElementById("problem").style.display = "block";
   client.invoke("getNewProblem", (error, problem) => {
     if (error) {
       console.error(error);
@@ -160,16 +135,17 @@ function getResponse() {
     if (error) {
       listeningImg.style.display = "none";
       console.error(error);
+      console.log("in error");
       inputAnswer.style.display = "block";
-      textToSpeech("Ik heb je niet begrepen");
-    } else if (response !== "Ik heb je niet begrepen" &&
-      response !== "Ik kon je niet verstaan" && response != null) {
+    } else if (response != "Ik heb je niet begrepen" &&
+      response != "Ik kon je niet verstaan" && response != null) {
         listeningImg.style.display = "none";
-        checkAnswer(response)
+        checkAnswer(response);
     } else {
       listeningImg.style.display = "none";
       textToSpeech(response);
       inputAnswer.style.display = "block";
+      console.log("in string error");
     }
   })
 }
@@ -195,10 +171,15 @@ function checkAnswer(response) {
     } else {
       var answeredCorrectly = result[0];
       var message = result[1];
+      textToSpeech(message);
+
+      if (message != "Je twijfelde") {
+        showImages(answeredCorrectly);
+      } else {
+        getProblems();
+      }
 
       nextProblem.disabled = false;
-      showImages(answeredCorrectly);
-      textToSpeech(message);
     }
   })
 }

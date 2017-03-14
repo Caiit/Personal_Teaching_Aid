@@ -19,7 +19,7 @@ def getResponse():
 		with sr.Microphone(chunk_size=8192) as source:
 			r.adjust_for_ambient_noise(source, duration=0.5)
 			try:
-				audio = r.listen(source, timeout=6)
+				audio = r.listen(source, timeout=5)
 			except sr.WaitTimeoutError:
 				return "Ik kon je niet verstaan"
 		try:
