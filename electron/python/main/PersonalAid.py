@@ -7,7 +7,7 @@ from answerRecognition import getResponse, correct
 from gtts import gTTS
 import os
 import zerorpc
-# from naoqi import ALProxy
+from naoqi import ALProxy
 
 class Api(object):
 
@@ -92,6 +92,7 @@ class Api(object):
 
 
     def textToSpeech(self, text):
+        text = self.replaceOperators(text)
         language = "nl"
         tts = gTTS(text=text, lang=language)
         tts.save("speech.mp3")
@@ -101,6 +102,13 @@ class Api(object):
             ttsProxy.say(text)
         else:
             os.system("mpg123 speech.mp3")
+
+    def replaceOperators(self, text):
+        text = text.replace("-", "min")
+        text = text.replace("+", "plus")
+        text = text.replace("*", "keer")
+        text = text.replace("/", "gedeeld door")
+        return text
 
 
     # def checkAnswers(student, problems):
@@ -124,21 +132,22 @@ class Api(object):
 
 
 # if __name__== '__main__':
-#     Api().recognizeStudent()
+#     Api().recognizeStudent("None")
+#     Api().getNewProblem()
     # checkAnswer(student, problems)
     # saveStudent(student)
 
 
 def main():
-    # api = Api()
-    # api.recognizeStudent("None")
-    # api.textToSpeech("hallo")
-    # api.getStudentInfo("tirza-soutehakjsdhasdj-0")
-    # for i in range(2):
-    #     problem = api.getNewProblem()
-    #     if problem:
-    #         print api.checkAnswer(eval(problem))
-    #     print problem
+#     # api = Api()
+#     # api.recognizeStudent("None")
+#     # api.textToSpeech("hallo")
+#     # api.getStudentInfo("tirza-soutehakjsdhasdj-0")
+#     # for i in range(2):
+#     #     problem = api.getNewProblem()
+#     #     if problem:
+#     #         print api.checkAnswer(eval(problem))
+#     #     print problem
     addr = 'tcp://127.0.0.1:' + str(3006)
     s = zerorpc.Server(Api())
     s.bind(addr)
