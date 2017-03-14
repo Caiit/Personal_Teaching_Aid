@@ -123,3 +123,6 @@ Implement:
 - Robot says "Hello", "I don't know you yet", etc.
 - English language option?
 - Nao gives the student feedback at the end of the session based on the student's level update: "Well done!" \*Nao cheers\* or "I bet it will go better next time"
+
+## 14-03-2017
+Hardcoded the operators so that they are pronounced correctly: e.g. "-" pronounced as "min" instead of "tot".
