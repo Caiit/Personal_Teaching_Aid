@@ -46,7 +46,6 @@ function getIpAddress() {
 
     if (ip != null && ip !== "") {
       document.getElementById("getIp").style.display = "none";
-      console.log(ip);
       startNaoProgram(ip);
     }
   })
@@ -207,6 +206,7 @@ function checkAnswer(response) {
 function showImages(answeredCorrectly) {
   if (answeredCorrectly) {
     document.getElementById("correctImg").style.display = "inline-block";
+    document.getElementById("submitAnswer").disabled = true;
   } else {
     document.getElementById("wrongImg").style.display = "inline-block";
     inputAnswer.style.display = "block";
@@ -217,6 +217,7 @@ function showImages(answeredCorrectly) {
 nextProblem.addEventListener("click", () => {
   getProblems();
   nextProblem.disabled = true;
+  document.getElementById("submitAnswer").disabled = false;
   document.getElementById("wrongImg").style.display = "none";
   document.getElementById("correctImg").style.display = "none";
   inputAnswer.reset();
