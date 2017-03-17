@@ -8,7 +8,6 @@ from gtts import gTTS
 import os
 import zerorpc
 from naoqi import ALProxy
-import time
 
 class Api(object):
 
@@ -21,20 +20,18 @@ class Api(object):
             self.w2n = pickle.load(handle)
 
 
-    def recognizeStudent(self, robotIP):
+    def startProgram(self, robotIP):
         self.robotIP = str(robotIP)
+        self.startRobot()
+        self.recognizeStudent()
+
+
+    def startRobot(self):
         if self.robotIP != "None":
+            self.motionProxy = ALProxy("ALMotion", robotIP, 9559)
+            self.motionProxy.stiffnessInterpolation("Body", 1.0, 1.0)
             self.robotBehavior(True, "animations/Stand/Gestures/Hey_4",
                 str("Hallo ik ben Noa"))
-
-        # studentID = recognizeStudent(self.robotIP)
-        name = ""
-        studentID = "Tirza-Soute-0"
-        # studentID = "_unknown"
-        if studentID is not "_unknown":
-            self.getStudentInfo(studentID)
-            name = self.student.getName()
-        return name
 
 
     def robotBehavior(self, parallel, behavior, text):
@@ -49,21 +46,34 @@ class Api(object):
                 self.textToSpeech(text)
 
 
-    def addNewUser(self, firstName, lastName):
-        studentID = saveNewUser(firstName, lastName)
+    def recognizeStudent(self):
+        # self.studentID = recognizeStudent(self.robotIP)
+        name = ""
+        self.studentID = "Tirza-Soute-0"
+        # self.studentID = "_unknown"
+        if self.studentID is not "_unknown":
+            self.getStudentInfo()
+            name = self.student.getName()
+        return name
 
-        if not studentID in self.database:
+
+    def addNewUser(self, firstName, lastName):
+        self.studentID = saveNewUser(firstName, lastName)
+
+        if not self.studentID in self.database:
             studentName = firstName + " " + lastName
-            self.student = Student(studentName, studentID)
-            self.database[studentID] = self.student
+            self.student = Student(studentName, self.studentID)
+            self.database[self.studentID] = self.student
             self.storeDatabase()
 
 
-    def getStudentInfo(self, studentID):
-        self.student = self.database.get(studentID)
+    def getStudentInfo(self):
+        self.student = self.database.get(self.studentID)
+        print self.student.getMax('+')
         # TODO: deze vanuit ui krijgen
-        n = 5
+        n = 3
         self.getPersonalProblems(n)
+        print self.student.getOperators()
 
 
     def echo(self, text):
@@ -91,12 +101,21 @@ class Api(object):
 
     def getNewProblem(self):
         if len(self.problems) == 0:
+            self.endProgram()
+            return "None"
+        self.problem = self.problems.pop(0)
+        self.textToSpeech(self.problem[0])
+        return self.problem[0]
+
+    def endProgram(self):
+        if (self.robotIP != "None"):
             self.robotBehavior(False,
                 "animations/Stand/Emotions/Positive/Happy_3",
                 str("Je bent klaar. Goed gedaan!"))
-        self.problem = self.problems.pop(0)[0]
-        self.textToSpeech(self.problem)
-        return self.problem
+            self.motionProxy.stiffnessInterpolation("Body", 0.0, 1.0)
+        self.updateRanges()
+        self.initNewOperator()
+        self.saveStudent()
 
 
     def getResponse(self):
@@ -104,9 +123,14 @@ class Api(object):
 
 
     def checkAnswer(self, response):
-        # TODO: Update operators?
-        correctAnswer = eval(self.problem)
-        return correct(correctAnswer, response, self.w2n, 2)
+        correctAnswer = eval(self.problem[0])
+        isCorrect = correct(correctAnswer, response, self.w2n, 2)
+
+        for operator in self.problem[1]:
+            self.student.updateOperators(operator, isCorrect[0])
+            self.student.updateIncrement(operator)
+
+        return isCorrect
 
 
     def textToSpeech(self, text):
@@ -116,10 +140,11 @@ class Api(object):
         tts.save("speech.mp3")
         if self.robotIP != "None":
             ttsProxy = ALProxy("ALTextToSpeech", self.robotIP, 9559)
-            ttsProxy.setLanguage("Dutch")
+            # ttsProxy.setLanguage("Dutch")
             ttsProxy.say(text)
         else:
             os.system("mpg123 speech.mp3")
+
 
     def replaceOperators(self, text):
         text = text.replace("-", "min")
@@ -129,45 +154,55 @@ class Api(object):
         return text
 
 
-    # def checkAnswers(student, problems):
-    #     with open('wordToNumDict.pickle', 'rb') as handle:
-    #         w2n = pickle.load(handle)
-    #     for p in problems:
-    #         problem = p[0]
-    #         operator = p[1]
-    #         print(problem)
-    #         correctAnswer = eval(problem)
-    #         givenAnswer = AnswerRecognition.correct(correctAnswer, w2n, 2)
-    #         student.updateOperators(operator, givenAnswer)
-    #     print(student.getOperators())
-    #
-    #
-    # def saveStudent(student):
-    #     database = loadDatabase()
-    #     studentID = student.getID()
-    #     database[studentID] = student
-    #     storeDatabase(database)
+    def updateRanges(self):
+        # TODO: niet elke keer updaten als geen vragen meer geweest zijn
+        for op in self.student.getOperators():
+            increment = self.student.getLastIncrement(op)
+            if self.student.getCorrectness(op)>=0.8 and increment%20==0 and increment%40!=0 and increment %60 !=0:
+                self.student.incrementMax(op, 10)
+
+
+    def initNewOperator(self):
+        operators = self.student.getOperators()
+        if '/' in operators:
+            return
+        elif '*' in operators  and self.student.getCorrectness('*')>=0.8  and operators['*']['lastIncrement']>=40:
+            if '/' not in operators:
+                self.student.initialiseOperator('/')
+        elif '-' in operators and self.student.getCorrectness('-')>=0.8  and operators['-']['lastIncrement']>=40:
+            if '*' not in operators:
+                self.student.initialiseOperator('*')
+        elif self.student.getCorrectness('+')>=0.8  and operators['+']['lastIncrement']>=40:
+            if '-' not in operators:
+                self.student.initialiseOperator('-')
+
+
+    def saveStudent(self):
+        self.database[self.studentID] = self.student
+        self.storeDatabase()
 
 
 # if __name__== '__main__':
-#     Api().recognizeStudent("146.50.60.13")
-#     Api().moveRobot("animations/Stand/Gestures/Hey_4")
-    # Api().getNewProblem()
-    # Api().checkAnswer("0")
-    # checkAnswer(student, problems)
-    # saveStudent(student)
+#     Api().startProgram("None")
+#     # Api().recognizeStudent("146.50.60.31")
+#     # Api().recognizeStudent("196.50.60.31")
+#     # Api().moveRobot("animations/Stand/Gestures/Hey_4")
+#     # Api().getNewProblem()
+#     # Api().checkAnswer("0")
+#     # checkAnswer(student, problems)
+#     # saveStudent(student)
 
 
 def main():
-# #     # api = Api()
-# #     # api.recognizeStudent("None")
-# #     # api.textToSpeech("hallo")
-# #     # api.getStudentInfo("tirza-soutehakjsdhasdj-0")
-# #     # for i in range(2):
-# #     #     problem = api.getNewProblem()
-# #     #     if problem:
-# #     #         print api.checkAnswer(eval(problem))
-# #     #     print problem
+#     # api = Api()
+#     # api.recognizeStudent("None")
+#     # api.textToSpeech("hallo")
+#     # api.getStudentInfo("tirza-soutehakjsdhasdj-0")
+#     # for i in range(2):
+#     #     problem = api.getNewProblem()
+#     #     if problem:
+#     #         print api.checkAnswer(eval(problem))
+#     #     print problem
     addr = 'tcp://127.0.0.1:' + str(3006)
     s = zerorpc.Server(Api())
     s.bind(addr)

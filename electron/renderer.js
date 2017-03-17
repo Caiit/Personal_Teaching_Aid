@@ -64,7 +64,7 @@ noNaoProgram.addEventListener("click", () => {
 })
 
 function startProgram(ip) {
-  client.invoke("recognizeStudent", ip, (error, result) => {
+  client.invoke("startProgram", ip, (error, result) => {
     if (error) {
       console.error(error);
     } else if (result == "") {
