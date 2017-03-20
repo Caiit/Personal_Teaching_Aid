@@ -29,8 +29,9 @@ label {
 }
 
 #problemPart {
-  display: none;
   width: 350px;
+  margin-left: 20px;
+  margin-right: 20px;
 }
 
 #inputAnswer {
@@ -96,7 +97,7 @@ label {
   cursor: pointer;
 }
 
-.startButton {
+.restartButton {
   background-color: white;
   color: #4CAF50;
   padding: 25px 42px;
@@ -109,13 +110,14 @@ label {
   margin-top: 200px;
 }
 
-.startButton:hover {
+.restartButton:hover {
   background-color: #4CAF50;
   color: white;
   cursor: pointer;
 }
 
-.problemContainer {
+#problemContainer {
+  display: none;
   text-align: center;
 }
 
@@ -155,6 +157,7 @@ label {
   height: 0;
   vertical-align: top;
   margin-right: 20px;
+  float: left;
 }
 
 .listeningImage {
@@ -175,6 +178,11 @@ label {
 }
 
 #getIp {
+  margin-top: 20px;
+  display: none;
+}
+
+#endScreen {
   margin-top: 20px;
   display: none;
 }

@@ -28,8 +28,7 @@
   <body>
     <h1 id="name"></h1>
 
-    <div class="problemContainer">
-
+    <div id="problemContainer">
       <div class="listeningImageContainer">
         <div id="listeningImage">
           <img src="./img/listeningGif.gif" id="listeningImg">
@@ -58,8 +57,6 @@
           <img src="./img/correct.png" class="answerImg" id="correctImg">
         </div>
       </div>
-
-      <p id="done"></p>
     </div>
 
     <div id="newStudent">
@@ -77,13 +74,21 @@
               <th><input type="text" id="inputLname" name="lname"></br></th>
             </tr>
           </table>
-            <button type="button" id="submitNewStudent"
-            class="submitButton" button align="bottom">Go</button>
         </form>
+
+        <button type="button" id="submitNewStudent"
+          class="submitButton" button align="bottom">Neem foto's</button>
+
+        <button type="button" id="startButton" class="submitButton"
+          button align="bottom">Start programma</button
+
       </center>
     </div>
 
-    <!-- <button type="button" id="start" class="startButton">Start</button> -->
+    <div id="endScreen">
+      <p id="done">Je bent klaar!</p>
+      <button type="button" id="restart" class="restartButton">Opnieuw</button>
+    </div>
 
   </body>
 

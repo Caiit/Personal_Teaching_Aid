@@ -69,15 +69,31 @@ function startProgram(ip) {
       console.error(error);
     } else if (result == "") {
       // Show input field
-      document.getElementById("newStudentText").style.display = "block";
       document.getElementById("newStudent").style.display = "block";
       document.getElementById("startUpScreen").style.display = "none";
+      // textToSpeech("Ik ken je nog niet. Wie ben je?")
     } else {
       // Show name
       name.textContent = result;
       document.getElementById("newStudent").style.display = "none";
       document.getElementById("startUpScreen").style.display = "none";
       getProblems();
+    }
+  })
+}
+
+// Get problems
+function getProblems() {
+  document.getElementById("name").style.display = "block";
+  client.invoke("getNewProblem", (error, problem) => {
+    if (error) {
+      console.error(error);
+    } else if (problem == "None") {
+      document.getElementById("problemContainer").style.display = "none";
+      document.getElementById("endScreen").style.display = "block";
+    } else {
+      document.getElementById("problem").textContent = problem;
+      document.getElementById("problemContainer").style.display = "inline-block";
     }
   })
 }
@@ -98,26 +114,13 @@ newUser.addEventListener("click", () => {
       document.getElementById("newStudent").style.display = "none";
     }
   })
-  getProblems();
 })
 
-// Get problems
-function getProblems() {
-  // document.getElementById("problem").style.display = "block";
-  client.invoke("getNewProblem", (error, problem) => {
-    if (error) {
-      console.error(error);
-    } else if (problem == "None") {
-      document.getElementById("done").textContent = "Je bent klaar!";
-      document.getElementById("problem").style.display = "none";
-      answer.style.display = "none";
-      document.getElementById("nextProblem").style.display = "none";
-    } else {
-      document.getElementById("problem").textContent = problem;
-      document.getElementById("problemPart").style.display = "inline-block";
-    }
-  })
-}
+let startButton = document.querySelector("#startButton");
+startButton.addEventListener("click", () => {
+  document.getElementById("newStudent").style.display = "none";
+  getProblems();
+})
 
 // Get student's response
 let answer = document.querySelector("#submitAnswer");
@@ -207,4 +210,12 @@ nextProblem.addEventListener("click", () => {
   document.getElementById("correctImg").style.display = "none";
   inputAnswer.reset();
   inputAnswer.style.display = "none"
+})
+
+// Restart the program
+let restartButton = document.querySelector("#restart");
+restartButton.addEventListener("click", () => {
+  document.getElementById("endScreen").style.display = "none";
+  document.getElementById("startUpScreen").style.display = "block";
+  document.getElementById("name").style.display = "none";
 })

@@ -35,23 +35,26 @@ from sklearn.mixture import GMM
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.naive_bayes import GaussianNB
 
-FILEDIR = os.path.dirname(os.path.realpath(__file__))
 
-
-def prepareImages():
+def prepareImages(fileDir):
     # Delete old cache file
-    if os.path.exists(FILEDIR + "/aligned-images/cache.t7"):
-        os.remove(FILEDIR + "/aligned-images/cache.t7")
+    if os.path.exists(fileDir + "/aligned-images/cache.t7"):
+        os.remove(fileDir + "/aligned-images/cache.t7")
     # Do pose detection and alignment
-    os.system(FILEDIR + "/util/align-dlib.py " + FILEDIR + "/training-images/" +
+    os.system(fileDir + "/util/align-dlib.py " + fileDir + "/training-images/" +
         " align outerEyesAndNose " +
-    FILEDIR + "/aligned-images/ --size 96")
+    fileDir + "/aligned-images/ --size 96")
     # Generate representations from the aligned images
-    os.system(FILEDIR + "/batch-represent/main.lua -outDir " + FILEDIR +
-        "/generated-embeddings/ -data " + FILEDIR + "/aligned-images/")
+    os.system(fileDir + "/batch-represent/main.lua -outDir " + fileDir +
+        "/generated-embeddings/ -data " + fileDir + "/aligned-images/")
 
 
-def train(folder, classifier):
+def train():
+    fileDir = os.path.dirname(os.path.realpath(__file__))
+    folder = fileDir + "/generated-embeddings/"
+    classifier = "LinearSvm"
+    prepareImages(fileDir)
+
     print("Loading embeddings.")
     fname = "{}/labels.csv".format(folder)
     labels = pd.read_csv(fname, header=None).as_matrix()[:, 1]
@@ -114,8 +117,9 @@ def classify():
 
 if __name__ == '__main__':
     # TODO: miss classifier als argument ofzo
-    classifier = "LinearSvm"
-    prepareImages()
-    train(FILEDIR + "/generated-embeddings/", classifier)
+    # classifier = "LinearSvm"
+    # prepareImages()
+    # train(FILEDIR + "/generated-embeddings/", classifier)
+    train()
     # To test the newly trained classifier
     # classify()

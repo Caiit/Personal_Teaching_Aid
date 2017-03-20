@@ -4,34 +4,48 @@ from ProblemGenerator import ProblemGenerator
 from faceRecognition import recognizeStudent
 from faceRecognition import saveNewUser
 from answerRecognition import getResponse, correct
+from trainer import train
 from gtts import gTTS
 import os
 import zerorpc
 from naoqi import ALProxy
+import numpy as np
 
 class Api(object):
 
     def __init__(self):
-        fileDir = os.path.dirname(os.path.realpath(__file__))
-        self.dbFile = os.path.join(fileDir, "StudentDatabase.pkl")
+        self.fileDir = os.path.dirname(os.path.realpath(__file__))
+        self.dbFile = os.path.join(self.fileDir, "StudentDatabase.pkl")
         self.loadDatabase()
+        self.amountOfProblems = 1
 
-        with open(os.path.join(fileDir, "wordToNumDict.pickle"), "rb") as handle:
+        with open(os.path.join(self.fileDir, "wordToNumDict.pickle"), "rb") as handle:
             self.w2n = pickle.load(handle)
+
+
+    def loadDatabase(self):
+        try:
+            self.database = pickle.load(open(self.dbFile, "rb"))
+        except EOFError:
+            self.database = {}
+        except IOError:
+            self.database = {}
 
 
     def startProgram(self, robotIP):
         self.robotIP = str(robotIP)
-        self.startRobot()
-        self.recognizeStudent()
+        if self.robotIP != "None":
+            self.startRobot()
+        return self.recognizeStudent()
 
 
     def startRobot(self):
-        if self.robotIP != "None":
-            self.motionProxy = ALProxy("ALMotion", robotIP, 9559)
-            self.motionProxy.stiffnessInterpolation("Body", 1.0, 1.0)
-            self.robotBehavior(True, "animations/Stand/Gestures/Hey_4",
-                str("Hallo ik ben Noa"))
+        self.motionProxy = ALProxy("ALMotion", self.robotIP, 9559)
+        self.motionProxy.stiffnessInterpolation("Body", 1.0, 1.0)
+        self.postureProxy = ALProxy("ALRobotPosture", self.robotIP, 9559)
+        self.postureProxy.goToPosture("StandInit", 0.5)
+        self.robotBehavior(True, "animations/Stand/Gestures/Hey_4",
+            str("Hallo, ik ben Noa. Laten we beginnen."))
 
 
     def robotBehavior(self, parallel, behavior, text):
@@ -49,12 +63,28 @@ class Api(object):
     def recognizeStudent(self):
         # self.studentID = recognizeStudent(self.robotIP)
         name = ""
-        self.studentID = "Tirza-Soute-0"
-        # self.studentID = "_unknown"
+        # self.studentID = "Tirza-Soute-0"
+        self.studentID = "_unknown"
         if self.studentID is not "_unknown":
             self.getStudentInfo()
             name = self.student.getName()
+            self.addedNewUser = False
         return name
+
+
+    def getStudentInfo(self):
+        self.student = self.database.get(self.studentID)
+        self.getPersonalProblems()
+
+
+    def getPersonalProblems(self):
+        self.correctBefore = 0
+
+        for operator, information in self.student.getOperators().items():
+            self.correctBefore += information.get("level")[0]
+
+        problemGenerator = ProblemGenerator(self.student)
+        self.problems = problemGenerator.getProblems(self.amountOfProblems)
 
 
     def addNewUser(self, firstName, lastName):
@@ -63,17 +93,10 @@ class Api(object):
         if not self.studentID in self.database:
             studentName = firstName + " " + lastName
             self.student = Student(studentName, self.studentID)
+            self.getPersonalProblems()
             self.database[self.studentID] = self.student
             self.storeDatabase()
-
-
-    def getStudentInfo(self):
-        self.student = self.database.get(self.studentID)
-        print self.student.getMax('+')
-        # TODO: deze vanuit ui krijgen
-        n = 3
-        self.getPersonalProblems(n)
-        print self.student.getOperators()
+            self.addedNewUser = True
 
 
     def echo(self, text):
@@ -81,41 +104,18 @@ class Api(object):
         return text
 
 
-    def loadDatabase(self):
-        try:
-            self.database = pickle.load(open(self.dbFile, "rb"))
-        except EOFError:
-            self.database = {}
-        except IOError:
-            self.database = {}
-
-
     def storeDatabase(self):
         pickle.dump(self.database, open(self.dbFile, "wb"))
-
-
-    def getPersonalProblems(self, n):
-        pg = ProblemGenerator(self.student)
-        self.problems = pg.getProblems(n)
 
 
     def getNewProblem(self):
         if len(self.problems) == 0:
             self.endProgram()
             return "None"
-        self.problem = self.problems.pop(0)
-        self.textToSpeech(self.problem[0])
-        return self.problem[0]
-
-    def endProgram(self):
-        if (self.robotIP != "None"):
-            self.robotBehavior(False,
-                "animations/Stand/Emotions/Positive/Happy_3",
-                str("Je bent klaar. Goed gedaan!"))
-            self.motionProxy.stiffnessInterpolation("Body", 0.0, 1.0)
-        self.updateRanges()
-        self.initNewOperator()
-        self.saveStudent()
+        else:
+            self.problem = self.problems.pop(0)
+            self.textToSpeech(self.problem[0])
+            return self.problem[0]
 
 
     def getResponse(self):
@@ -129,20 +129,20 @@ class Api(object):
         for operator in self.problem[1]:
             self.student.updateOperators(operator, isCorrect[0])
             self.student.updateIncrement(operator)
-
         return isCorrect
 
 
     def textToSpeech(self, text):
         text = self.replaceOperators(text)
-        language = "nl"
-        tts = gTTS(text=text, lang=language)
-        tts.save("speech.mp3")
+
         if self.robotIP != "None":
             ttsProxy = ALProxy("ALTextToSpeech", self.robotIP, 9559)
-            # ttsProxy.setLanguage("Dutch")
+            ttsProxy.setLanguage("Dutch")
             ttsProxy.say(text)
         else:
+            language = "nl"
+            tts = gTTS(text=text, lang=language)
+            tts.save("speech.mp3")
             os.system("mpg123 speech.mp3")
 
 
@@ -152,6 +152,52 @@ class Api(object):
         text = text.replace("*", "keer")
         text = text.replace("/", "gedeeld door")
         return text
+
+
+    def endProgram(self):
+        if self.addedNewUser:
+            train()
+        self.giveFeedback()
+        if self.robotIP != "None":
+            self.motionProxy.rest()
+        self.updateRanges()
+        self.initNewOperator()
+        self.saveStudent()
+
+
+    def giveFeedback(self):
+        level = self.calculateLevel()
+        if level > 0.55:
+            self.positiveFeedback()
+        else:
+            self.negativeFeedback()
+
+
+    def calculateLevel(self):
+        correctAfter = 0
+
+        for operator, information in self.student.getOperators().items():
+            correctAfter += information.get("level")[0]
+        return float((correctAfter - self.correctBefore))/self.amountOfProblems
+
+
+    def positiveFeedback(self):
+        if self.robotIP != "None":
+            self.robotBehavior(False,
+                "animations/Stand/Emotions/Positive/Happy_3",
+                str("Je bent klaar. Goed gedaan!"))
+        else:
+            self.textToSpeech(str("Je bent klaar. Goed gedaan!"))
+
+
+    def negativeFeedback(self):
+        if self.robotIP != "None":
+            self.robotBehavior(False,
+                "animations/Stand/Gestures/JointHands_1",
+                str("Je hebt je best gedaan. Volgende keer gaat het vast beter!"))
+        else:
+            self.textToSpeech("Je hebt je best gedaan. Volgende keer gaat het" +
+                "vast beter!")
 
 
     def updateRanges(self):
@@ -183,26 +229,12 @@ class Api(object):
 
 
 # if __name__== '__main__':
-#     Api().startProgram("None")
-#     # Api().recognizeStudent("146.50.60.31")
-#     # Api().recognizeStudent("196.50.60.31")
-#     # Api().moveRobot("animations/Stand/Gestures/Hey_4")
-#     # Api().getNewProblem()
-#     # Api().checkAnswer("0")
-#     # checkAnswer(student, problems)
-#     # saveStudent(student)
-
+#     api = Api()
+#     api.startProgram("10.42.0.180")
+#     api.getNewProblem()
+#     api.endProgram()
 
 def main():
-#     # api = Api()
-#     # api.recognizeStudent("None")
-#     # api.textToSpeech("hallo")
-#     # api.getStudentInfo("tirza-soutehakjsdhasdj-0")
-#     # for i in range(2):
-#     #     problem = api.getNewProblem()
-#     #     if problem:
-#     #         print api.checkAnswer(eval(problem))
-#     #     print problem
     addr = 'tcp://127.0.0.1:' + str(3006)
     s = zerorpc.Server(Api())
     s.bind(addr)
