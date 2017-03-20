@@ -127,3 +127,6 @@ Implement:
 - Nao gives the student feedback at the end of the session based on the student's level update: "Well done!" \*Nao cheers\* or "I bet it will go better next time"
 - When will the program train on new data?
 - After adding a new user, start the program
+
+## 17-03-2017
+Incorporated the latest ProblemGenerator into Electron so the basic program fully works now. Also prevented the possibility of getting the same problems in a set of questions.
