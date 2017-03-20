@@ -130,3 +130,10 @@ Implement:
 
 ## 17-03-2017
 Incorporated the latest ProblemGenerator into Electron so the basic program fully works now. Also prevented the possibility of getting the same problems in a set of questions.
+
+## 20-03-2017
+Tested facial and speech recognition for the evaluation. Implemented the feedback functionality, the program now trains at the end if a new user was added and the rest of the program now starts after adding a new user.
+
+Implement:
+- Robot says "I don't know you yet" 
+- English language option?
