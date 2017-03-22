@@ -10,27 +10,8 @@ client.invoke("echo", "server ready", (error, res) => {
   }
 })
 
-// let start = document.getElementById("start");
 let name = document.querySelector("#name");
-// // Recognize student
-// start.addEventListener("click", () => {
-//   client.invoke("recognizeStudent", "None", (error, result) => {
-//     if (error) {
-//       console.error(error);
-//     } else if (result == "") {
-//       // Show input field
-//       document.getElementById("newStudentText").style.display = "block";
-//       document.getElementById("newStudent").style.display = "block";
-//       hideStartButtons();
-//     } else {
-//       // Show name
-//       name.textContent = result;
-//       document.getElementById("newStudent").style.display = "none";
-//       hideStartButtons();
-//       getProblems();
-//     }
-//   })
-// })
+let ip = "";
 
 let naoProgram = document.getElementById("naoImg");
 naoProgram.addEventListener("click", () => {
@@ -47,31 +28,41 @@ cancelNaoProgram.addEventListener("click", () => {
 function getIpAddress() {
   document.getElementById("askNaoContainer").style.display = "none";
   document.getElementById("getIp").style.display = "block";
-
-  document.getElementById("giveIp").addEventListener("click", () => {
-    ip = document.getElementById("inputIp").value;
-
-    if (ip != null && ip !== "") {
-      document.getElementById("getIp").style.display = "none";
-      startProgram(ip);
-    }
-  })
 }
+
+// Add click event listener to OK in IP address field
+document.getElementById("giveIp").addEventListener("click", () => {
+  console.log("clicked okay ip");
+  ip = document.getElementById("inputIp").value;
+
+  if (ip != null && ip !== "") {
+    document.getElementById("getIp").style.display = "none";
+    startProgram(ip);
+  }
+});
+
+let inDatabase = document.getElementById("studentInDatabase");
+inDatabase.addEventListener("click", () => {
+  startProgram(ip);
+})
 
 let noNaoProgram = document.getElementById("noNaoImg");
 noNaoProgram.addEventListener("click", () => {
-  startProgram("None");
+  ip = "None";
+  startProgram(ip);
 })
 
 function startProgram(ip) {
+  console.log("start program")
   client.invoke("startProgram", ip, (error, result) => {
     if (error) {
       console.error(error);
-    } else if (result == "") {
+      // document.getElementById("newStudent").style.display = "block";
+      // document.getElementById("startUpScreen").style.display = "none";
+    } else if (result == "_unknown" || typeof(result) == "undefined") {
       // Show input field
       document.getElementById("newStudent").style.display = "block";
       document.getElementById("startUpScreen").style.display = "none";
-      textToSpeech("Ik ken je nog niet. Wie ben je?")
     } else {
       // Show name
       name.textContent = result;
@@ -103,7 +94,7 @@ function getProblems() {
 function endProgram() {
   client.invoke("endProgram", (error) => {
     if (error) {
-      console.log(error);
+      console.error(error);
     }
   })
 }
@@ -150,8 +141,9 @@ function getResponse() {
       listeningImg.style.display = "none";
       console.error(error);
       inputAnswer.style.display = "block";
-    } else if (response != "Ik heb je niet begrepen" &&
-      response != "Ik kon je niet verstaan" && response != null) {
+    } else if (response != "Ik heb je niet begrepen. Kan je je antwoord typen?"
+      && response != "Ik kon je niet verstaan. Kan je je antwoord typen?"
+      && response != null) {
         listeningImg.style.display = "none";
         checkAnswer(response);
     } else {
@@ -159,6 +151,7 @@ function getResponse() {
       textToSpeech(response);
       inputAnswer.style.display = "block";
     }
+    console.log(response.toString());
   })
 }
 
@@ -220,7 +213,8 @@ nextProblem.addEventListener("click", () => {
 // Restart the program
 let restartButton = document.querySelector("#restart");
 restartButton.addEventListener("click", () => {
-  document.getElementById("endScreen").style.display = "none";
-  document.getElementById("startUpScreen").style.display = "block";
+  document.getElementById("endScreen").style.display = null;
+  document.getElementById("startUpScreen").style.display = null;
+  document.getElementById("askNaoContainer").style.display = null;
   document.getElementById("name").style.display = "none";
 })

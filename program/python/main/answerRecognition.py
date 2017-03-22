@@ -8,7 +8,7 @@ units = ['nul', 'twee', 'drie', 'vier', 'vijf',
 'dertien', 'veertien', 'vijftien',  'zestien', 'zeventien', 'achttien',
 'negentien', 'twintig', 'dertig', 'veertig', 'vijftig', 'zestig', 'zeventig',
 'tachtig', 'negentig', 'duizend', 'miljoen', 'miljard', '0' '1', '2', '3', '4',
-'5', '6', '7', '8', '9']
+'5', '6', '7', '8', '9', '-', 'min']
 
 def getResponse():
 	r = sr.Recognizer()
@@ -21,15 +21,15 @@ def getResponse():
 			try:
 				audio = r.listen(source, timeout=5)
 			except sr.WaitTimeoutError:
-				return "Ik kon je niet verstaan"
+				return "Ik kon je niet verstaan. Kan je je antwoord typen?"
 		try:
 			response  = r.recognize_google(audio, language='nl-NL')
 			return response
 		# Speech is unintelligible
 		except LookupError:
-			return "Ik heb je niet begrepen"
+			return "Ik heb je niet begrepen. Kan je je antwoord typen?"
 		except sr.UnknownValueError:
-			return "Ik heb je niet begrepen"
+			return "Ik heb je niet begrepen. Kan je je antwoord typen?"
 	return None
 
 def hesitationInResponse(response):
@@ -48,6 +48,7 @@ def numberInResponse(response):
 	return False
 
 def answerInResponse(answer, response, w2n):
+	print response
 	containsAnswer = False
 	answer = str(answer)
 	if answer in response:

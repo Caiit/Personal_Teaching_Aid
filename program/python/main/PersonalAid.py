@@ -16,8 +16,7 @@ class Api(object):
     def __init__(self):
         self.fileDir = os.path.dirname(os.path.realpath(__file__))
         self.dbFile = os.path.join(self.fileDir, "StudentDatabase.pkl")
-        self.loadDatabase()
-        self.amountOfProblems = 5
+        self.amountOfProblems = 10
 
         with open(os.path.join(self.fileDir, "wordToNumDict.pickle"), "rb") as handle:
             self.w2n = pickle.load(handle)
@@ -36,6 +35,8 @@ class Api(object):
         self.robotIP = str(robotIP)
         if self.robotIP != "None":
             self.startRobot()
+
+        self.loadDatabase()
         return self.recognizeStudent()
 
 
@@ -62,13 +63,17 @@ class Api(object):
 
     def recognizeStudent(self):
         self.studentID = recognizeStudent(self.robotIP)
-        name = ""
+        name = self.studentID
         # self.studentID = "Tirza-Soute-0"
         # self.studentID = "_unknown"
-        if self.studentID is not "_unknown":
+        if self.studentID != "_unknown":
             self.getStudentInfo()
             name = self.student.getName()
             self.addedNewUser = False
+            # string = str("Ik herken" + name)
+            # self.textToSpeech(string)
+        else:
+            self.textToSpeech("Ik ken je nog niet. Kan je je naam invoeren?")
         return name
 
 
@@ -232,8 +237,11 @@ class Api(object):
 # if __name__== '__main__':
 #     api = Api()
 #     api.startProgram("None")
-#     api.addNewUser("asjdhajsd", "ajhsdgjhasd")
-#     api.endProgram()
+#     api.getNewProblem()
+#     response = api.getResponse()
+#     print response
+    # print api.checkAnswer(response)
+    # api.endProgram()
 
 if __name__ == '__main__':
     addr = 'tcp://127.0.0.1:' + str(3006)

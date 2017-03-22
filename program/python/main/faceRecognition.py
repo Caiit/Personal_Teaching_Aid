@@ -29,6 +29,7 @@ def setThreshold():
         THRESHOLD = 0.80
     elif (amountPersons < 5):
         THRESHOLD = 0.65
+        # THRESHOLD = 0.05
     elif (amountPersons < 10):
         THRESHOLD = 0.4
     elif (amountPersons < 20):
@@ -37,6 +38,8 @@ def setThreshold():
 
 def recognizeStudent(robotIP):
     ''' Recognize the student in front of the webcam. '''
+
+    setThreshold()
 
     # Load the directories and neural network
     modelDir = os.path.join(FILEDIR, 'models')
@@ -62,7 +65,7 @@ def identifyPerson(align, net, robotIP):
         videoDevice = ALProxy('ALVideoDevice', robotIP, 9559)
 
         # subscribe top camera
-        AL_kTopCamera = 0
+        AL_kTopCamera = 1
         AL_kQVGA = 1            # 320x240
         AL_kBGRColorSpace = 13
         captureDevice = videoDevice.subscribeCamera(
@@ -109,10 +112,10 @@ def identifyPerson(align, net, robotIP):
     person = possiblePersons.most_common(1)[0][0]
 
     print person
-    if person == "_unknown":
-        fName = raw_input("Voornaam: \n")
-        lName = raw_input("Achternaam: \n")
-        saveNewUser(fName, lName)
+    # if person == "_unknown":
+        # fName = raw_input("Voornaam: \n")
+        # lName = raw_input("Achternaam: \n")
+        # saveNewUser("sahdjahsgd", "asdyasjhdb")
 
 
     return person

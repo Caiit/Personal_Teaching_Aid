@@ -19,7 +19,7 @@
 
     <div id="getIp">
       <p>Wat is het IP-adres van de robot?</p>
-      <input type="text" id="inputIp"></br></br>
+      <input type="text" id="inputIp" value="10.42.0.180"></br></br>
       <button type="button" id="cancelIp">Cancel</button>
       <button type="button" id="giveIp">OK</button>
     </div>
@@ -51,12 +51,14 @@
         </div>
       </div>
 
-      <div class="problemImagesContainer">
+      <center>
+      <!-- <div class="problemImagesContainer"> -->
         <div class="problemImages">
           <img src="./img/wrong.png" class="answerImg" id="wrongImg">
           <img src="./img/correct.png" class="answerImg" id="correctImg">
         </div>
-      </div>
+      <!-- </div> -->
+    </center>
     </div>
 
     <div id="newStudent">
@@ -78,6 +80,8 @@
 
         <button type="button" id="submitNewStudent"
           class="submitButton" button align="bottom">Neem foto's</button>
+        <button type="button" id="studentInDatabase" class="submitButton"
+          button align="bottom">Je kent me wel</button>
 
       </center>
     </div>

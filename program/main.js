@@ -11,7 +11,9 @@ const createWindow = () => {
     protocol: 'file:',
     slashes: true
   }))
-  mainWindow.webContents.openDevTools()
+  mainWindow.setFullScreen(true)
+  // Uncomment for debug tool
+  // mainWindow.webContents.openDevTools()
   mainWindow.on('closed', () => {
     mainWindow = null
   })
