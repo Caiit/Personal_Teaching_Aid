@@ -137,3 +137,6 @@ Tested facial and speech recognition for the evaluation. Implemented the feedbac
 Implement:
 - Robot says "I don't know you yet" 
 - English language option?
+
+## 22-03-2017
+Cleaned Git and finished up the program. There were a lot of errors after the last commit/push and they were all fixed. The entire program works as expected now.
