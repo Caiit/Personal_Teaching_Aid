@@ -17,7 +17,7 @@ class Api(object):
         self.fileDir = os.path.dirname(os.path.realpath(__file__))
         self.dbFile = os.path.join(self.fileDir, "StudentDatabase.pkl")
         self.loadDatabase()
-        self.amountOfProblems = 1
+        self.amountOfProblems = 5
 
         with open(os.path.join(self.fileDir, "wordToNumDict.pickle"), "rb") as handle:
             self.w2n = pickle.load(handle)
@@ -61,10 +61,10 @@ class Api(object):
 
 
     def recognizeStudent(self):
-        # self.studentID = recognizeStudent(self.robotIP)
+        self.studentID = recognizeStudent(self.robotIP)
         name = ""
         # self.studentID = "Tirza-Soute-0"
-        self.studentID = "_unknown"
+        # self.studentID = "_unknown"
         if self.studentID is not "_unknown":
             self.getStudentInfo()
             name = self.student.getName()
@@ -78,25 +78,27 @@ class Api(object):
 
 
     def getPersonalProblems(self):
-        self.correctBefore = 0
-
-        for operator, information in self.student.getOperators().items():
-            self.correctBefore += information.get("level")[0]
-
+        self.calculateLevelBefore()
         problemGenerator = ProblemGenerator(self.student)
         self.problems = problemGenerator.getProblems(self.amountOfProblems)
+
+
+    def calculateLevelBefore(self):
+        self.correctBefore = 0
+        for operator, information in self.student.getOperators().items():
+            self.correctBefore += information.get("level")[0]
 
 
     def addNewUser(self, firstName, lastName):
         self.studentID = saveNewUser(firstName, lastName)
 
-        if not self.studentID in self.database:
-            studentName = firstName + " " + lastName
-            self.student = Student(studentName, self.studentID)
-            self.getPersonalProblems()
-            self.database[self.studentID] = self.student
-            self.storeDatabase()
-            self.addedNewUser = True
+        # if not self.studentID in self.database:
+        studentName = firstName + " " + lastName
+        self.student = Student(studentName, self.studentID)
+        self.getPersonalProblems()
+        self.database[self.studentID] = self.student
+        self.storeDatabase()
+        self.addedNewUser = True
 
 
     def echo(self, text):
@@ -110,7 +112,6 @@ class Api(object):
 
     def getNewProblem(self):
         if len(self.problems) == 0:
-            self.endProgram()
             return "None"
         else:
             self.problem = self.problems.pop(0)
@@ -155,25 +156,25 @@ class Api(object):
 
 
     def endProgram(self):
-        if self.addedNewUser:
-            train()
         self.giveFeedback()
         if self.robotIP != "None":
             self.motionProxy.rest()
         self.updateRanges()
         self.initNewOperator()
         self.saveStudent()
+        if self.addedNewUser:
+            train()
 
 
     def giveFeedback(self):
-        level = self.calculateLevel()
+        level = self.calculateLevelAfter()
         if level > 0.55:
             self.positiveFeedback()
         else:
             self.negativeFeedback()
 
 
-    def calculateLevel(self):
+    def calculateLevelAfter(self):
         correctAfter = 0
 
         for operator, information in self.student.getOperators().items():
@@ -230,16 +231,13 @@ class Api(object):
 
 # if __name__== '__main__':
 #     api = Api()
-#     api.startProgram("10.42.0.180")
-#     api.getNewProblem()
+#     api.startProgram("None")
+#     api.addNewUser("asjdhajsd", "ajhsdgjhasd")
 #     api.endProgram()
 
-def main():
+if __name__ == '__main__':
     addr = 'tcp://127.0.0.1:' + str(3006)
     s = zerorpc.Server(Api())
     s.bind(addr)
     print('start running on {}'.format(addr))
     s.run()
-
-if __name__ == '__main__':
-    main()

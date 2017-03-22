@@ -71,7 +71,7 @@ function startProgram(ip) {
       // Show input field
       document.getElementById("newStudent").style.display = "block";
       document.getElementById("startUpScreen").style.display = "none";
-      // textToSpeech("Ik ken je nog niet. Wie ben je?")
+      textToSpeech("Ik ken je nog niet. Wie ben je?")
     } else {
       // Show name
       name.textContent = result;
@@ -89,11 +89,21 @@ function getProblems() {
     if (error) {
       console.error(error);
     } else if (problem == "None") {
-      document.getElementById("problemContainer").style.display = "none";
-      document.getElementById("endScreen").style.display = "block";
+        document.getElementById("problemContainer").style.display = "none";
+        document.getElementById("endScreen").style.display = "block";
+        endProgram();
     } else {
       document.getElementById("problem").textContent = problem;
       document.getElementById("problemContainer").style.display = "inline-block";
+    }
+  })
+}
+
+// Ends the program
+function endProgram() {
+  client.invoke("endProgram", (error) => {
+    if (error) {
+      console.log(error);
     }
   })
 }
@@ -112,14 +122,9 @@ newUser.addEventListener("click", () => {
       // Show name
       name.textContent = fName + " " + lName;
       document.getElementById("newStudent").style.display = "none";
+      getProblems();
     }
   })
-})
-
-let startButton = document.querySelector("#startButton");
-startButton.addEventListener("click", () => {
-  document.getElementById("newStudent").style.display = "none";
-  getProblems();
 })
 
 // Get student's response

@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+# !/usr/bin/env python2
 
 import time
 import argparse
@@ -17,9 +17,23 @@ np.set_printoptions(precision=2)
 IMG_DIM = 96
 WIDTH = 320
 HEIGHT = 240
-THRESHOLD = 0.65
+THRESHOLD = 0.3
 
 FILEDIR = os.path.dirname(os.path.realpath(__file__))
+
+def setThreshold():
+    global THRESHOLD
+    imagesDir = os.path.join(FILEDIR, 'aligned-images')
+    amountPersons = len([name for name in os.listdir(imagesDir)]) - 1
+    if (amountPersons < 3):
+        THRESHOLD = 0.80
+    elif (amountPersons < 5):
+        THRESHOLD = 0.65
+    elif (amountPersons < 10):
+        THRESHOLD = 0.4
+    elif (amountPersons < 20):
+        THRESHOLD = 0.35
+    # TODO: checken of dit beetje klopt
 
 def recognizeStudent(robotIP):
     ''' Recognize the student in front of the webcam. '''
@@ -76,6 +90,7 @@ def identifyPerson(align, net, robotIP):
         # Add recognized person to list of possible persons
         for i, c in enumerate(confidences):
             # If the confidence is too low, classify the person as unknown
+            print persons[i], c, THRESHOLD
             if c <= THRESHOLD:
                 persons[i] = "_unknown"
             possiblePersons[persons[i]] += 1
@@ -92,6 +107,14 @@ def identifyPerson(align, net, robotIP):
     cv2.destroyAllWindows()
 
     person = possiblePersons.most_common(1)[0][0]
+
+    print person
+    if person == "_unknown":
+        fName = raw_input("Voornaam: \n")
+        lName = raw_input("Achternaam: \n")
+        saveNewUser(fName, lName)
+
+
     return person
 
 
@@ -215,4 +238,5 @@ def takePictures(n, directory):
 
 
 if __name__ == '__main__':
-    recognizeStudent("10.42.0.180")
+    setThreshold()
+    recognizeStudent("None")
